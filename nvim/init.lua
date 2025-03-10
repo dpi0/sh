@@ -35,11 +35,12 @@ local plugins = {
   require("plugins.which-key"), -- Displays available keybindings.
   require("plugins.todo"), -- Todo.
   require("plugins.yazi"), -- Yazi.
-  require("plugins.lazygit"), -- Lazygit.
+  -- require("plugins.lazygit"), -- Lazygit.
   require("plugins.diff"), -- Better diff (than gitsigns).
   require("plugins.surround"), -- Surround.
   require("plugins.flash-jump"), -- Jump quickly to text.
   -- require("plugins.fold"), -- Modern code folding.
+  require("plugins.snacks"), -- QoL
 }
 
 -- Conditionally add if hostname is "arch"
@@ -52,6 +53,8 @@ if hostname == "arch" then
   table.insert(plugins, require("plugins.none-ls-formatter")) -- Code formatting.
   table.insert(plugins, require("plugins.screenshot")) -- Screenshot code snippet.
   table.insert(plugins, require("plugins.markdown")) -- Markdown render.
+  table.insert(plugins, require("plugins.undo")) -- Telescope undo.
+  table.insert(plugins, require("plugins.clipboard")) -- Neogit clipboard.
 end
 
 -- Load all plugins at once
