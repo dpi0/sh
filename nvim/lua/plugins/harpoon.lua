@@ -73,5 +73,17 @@ return {
     vim.keymap.set("n", "<A-4>", function()
       harpoon:list():select(4)
     end)
+
+    vim.keymap.set("n", "<A-0>", function()
+      harpoon:list():select(5)
+    end)
+
+    vim.keymap.set("n", "<A-9>", function()
+      harpoon:list():select(6)
+    end)
+
+    vim.keymap.set("n", "<A-8>", function()
+      harpoon:list():select(7)
+    end)
   end,
 }

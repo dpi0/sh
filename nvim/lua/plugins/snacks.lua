@@ -5,10 +5,6 @@ return {
   opts = {
     indent = {
       enabled = true, --- * out: animate outwards from the cursor
-      --- * up: animate upwards from the cursor
-      --- * down: animate downwards from the cursor
-      --- * up_down: animate up or down based on the cursor position
-      ---@field style? "out"|"up_down"|"down"|"up"
       animate = {
         enabled = vim.fn.has("nvim-0.10") == 1,
         style = "out",

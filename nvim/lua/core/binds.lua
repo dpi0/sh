@@ -46,6 +46,8 @@ vim.g.VM_maps = {
   ["Add Cursor Up"] = "<A-S-k>",
 }
 
+vim.g.VM_show_warnings = 0
+
 -- ===========================
 -- ESSENTIAL MAPPINGS
 -- ===========================
@@ -61,8 +63,8 @@ bind("x", "<leader>p", [["_dP]], "Paste without copying to register")
 bind("n", "<leader>ll", "<cmd>Lazy<CR>", "Open Lazy Plugin Manager")
 bind("n", "<leader>rr", "<cmd>source %<CR>", "Reload Neovim config")
 
-bind("n", "<C-q>", cmd("qa"), "Quit all")
-bind("n", "<A-q>", cmd("q"), "Quit current file")
+bind("n", "<leader>q", cmd("qa"), "Quit all")
+bind("n", "<A-q>", cmd("bd"), "Quit current buffer")
 
 bind("n", "<C-a>", "ggVG", "Select all text")
 
@@ -77,8 +79,8 @@ bind("n", "<A-a>", "<C-^>", "Switch to last buffer")
 bind("i", "<A-a>", "<C-^>", "Switch to last buffer")
 
 -- Scroll and center
-bind("n", "<C-d>", "<C-d>zz", "Scroll down and center")
-bind("n", "<C-u>", "<C-u>zz", "Scroll up and center")
+-- bind("n", "<C-d>", "<C-d>zz", "Scroll down and center")
+-- bind("n", "<C-u>", "<C-u>zz", "Scroll up and center")
 bind("n", "n", "nzzzv", "Next search result centered")
 bind("n", "N", "Nzzzv", "Previous search result centered")
 
@@ -135,7 +137,7 @@ bind("v", "p", '"_dP', "Paste without overwriting register")
 bind("n", "[d", cmd("lua vim.diagnostic.goto_prev()"), "Previous diagnostic")
 bind("n", "]d", cmd("lua vim.diagnostic.goto_next()"), "Next diagnostic")
 bind("n", "<leader>d", cmd("lua vim.diagnostic.open_float()"), "Show diagnostics")
-bind("n", "<leader>q", cmd("lua vim.diagnostic.setloclist()"), "Show diagnostic list")
+bind("n", "<leader>ds", cmd("lua vim.diagnostic.setloclist()"), "Show diagnostic list")
 
 -- ===========================
 -- INDENTATION STYLES
@@ -167,3 +169,5 @@ bind("n", "<A-t>", ":Todo<CR>", "Todo")
 
 bind("n", "<leader>dfo", ":DiffviewOpen<CR>", "Diff Open")
 bind("n", "<leader>dfc", ":DiffviewClose<CR>", "Diff Close")
+
+bind("n", "<leader>cc", ":Telescope neoclip<CR>", "Clipboard")

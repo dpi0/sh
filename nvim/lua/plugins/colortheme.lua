@@ -3,7 +3,7 @@ return {
   lazy = false,
   priority = 1000,
   config = function()
-    vim.cmd([[colorscheme kanagawa]])
+    vim.cmd([[colorscheme kanagawa-wave]])
     require("kanagawa").setup({
       compile = false, -- enable compiling the colorscheme
       undercurl = true, -- enable undercurls
@@ -12,21 +12,33 @@ return {
       keywordStyle = { italic = true },
       statementStyle = { bold = true },
       typeStyle = {},
-      transparent = false, -- do not set background color
+      transparent = true, -- do not set background color
       dimInactive = false, -- dim inactive window `:h hl-NormalNC`
       terminalColors = true, -- define vim.g.terminal_color_{0,17}
       colors = { -- add/modify theme and palette colors
         palette = {},
         theme = { wave = {}, lotus = {}, dragon = {}, all = {} },
       },
-      overrides = function(colors) -- add/modify highlights
-        return {}
-      end,
+      -- overrides = function(colors) -- add/modify highlights
+      --   return {}
+      -- end,
       theme = "wave", -- Load "wave" theme when 'background' option is not set
       background = { -- map the value of 'background' option to a theme
         dark = "dragon", -- try "dragon" !
         light = "lotus",
       },
     })
+    vim.api.nvim_create_autocmd("VimEnter", {
+      callback = function()
+        vim.cmd("colorscheme kanagawa-wave")
+      end,
+    })
+    -- vim.api.nvim_create_autocmd("BufEnter", {
+    --   pattern = "*", -- Apply to all buffers
+    --   callback = function()
+    --     vim.opt_local.foldcolumn = "9"
+    --     vim.opt_local.signcolumn = "yes:9"
+    --   end,
+    -- })
   end,
 }

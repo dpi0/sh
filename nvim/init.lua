@@ -20,7 +20,6 @@ local hostname = vim.loop.os_gethostname()
 local plugins = {
   require("plugins.alpha"), -- Startup dashboard for Neovim.
   require("plugins.autopairs"), -- Auto-closes brackets and quotes.
-  require("plugins.auto-session"), -- Automatically restore sessions.
   require("plugins.colorizer"), -- Highlights color codes in files.
   require("plugins.colortheme"), -- Sets the color scheme for the editor.
   require("plugins.comment"), -- Simplifies code commenting.
@@ -41,6 +40,8 @@ local plugins = {
   require("plugins.flash-jump"), -- Jump quickly to text.
   -- require("plugins.fold"), -- Modern code folding.
   require("plugins.snacks"), -- QoL
+  require("plugins.session"), -- Manage sessions.
+  require("plugins.zen"), -- Center.
 }
 
 -- Conditionally add if hostname is "arch"
@@ -55,6 +56,8 @@ if hostname == "arch" then
   table.insert(plugins, require("plugins.markdown")) -- Markdown render.
   table.insert(plugins, require("plugins.undo")) -- Telescope undo.
   table.insert(plugins, require("plugins.clipboard")) -- Neogit clipboard.
+  table.insert(plugins, require("plugins.diagnose")) -- Diagnosis Trouble.
+  -- table.insert(plugins, require("plugins.noice")) -- Noice.
 end
 
 -- Load all plugins at once
