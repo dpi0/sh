@@ -1,15 +1,15 @@
 [[manager.prepend_keymap]]
-on = ["C"]
+on = ["g", "z"]
 run = "plugin ouch --args=zip"
 desc = "Compress with ouch"
 
 [[manager.prepend_keymap]]
-on = ["s", "s"]
+on = ["g", "s"]
 run = "plugin what-size"
 desc = "Calc size of selection or cwd"
 
 [[manager.prepend_keymap]]
-on   = [ "c", "m" ]
+on   = [ "g", "m" ]
 run  = "plugin chmod"
 desc = "Chmod on selected files"
 
@@ -24,10 +24,11 @@ run  = "close"
 desc = "Cancel input"
 
 [[manager.prepend_keymap]]
-on  = "<A-d>"
+# on  = "<A-d>"
+on   = [ "g", "o" ]
 run = 'shell -- dragon -x -i -T "$1"'
 
 [[manager.prepend_keymap]]
-on   = [ "g", "i" ]
+on   = [ "g", "l" ]
 run  = "plugin lazygit"
 desc = "run lazygit"
