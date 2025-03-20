@@ -1,0 +1,116 @@
+#!/usr/bin/env bash
+set -e
+
+# Function to display usage information
+usage() {
+  echo "Usage: copy-to-clipboard [OPTIONS] <file>"
+  echo ""
+  echo "Copy file contents to clipboard"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help      Show this help message and exit"
+  echo "  -t, --text      Copy string directly instead of file (use quotes)"
+  echo ""
+  echo "Examples:"
+  echo "  copy-to-clipboard file.txt      # Copy contents of file.txt to clipboard"
+  echo "  copy-to-clipboard -t \"Hello\"   # Copy \"Hello\" to clipboard"
+  exit 1
+}
+
+# Function to detect and use the appropriate clipboard command
+copy_to_clipboard() {
+  local content="$1"
+
+  # Try Linux Wayland clipboard (wl-copy)
+  if command -v wl-copy &> /dev/null; then
+    echo "$content" | wl-copy
+    echo "✅ Copied to clipboard using wl-copy"
+    return 0
+  fi
+
+  # Try Linux X11 clipboard (xclip)
+  if command -v xclip &> /dev/null; then
+    echo "$content" | xclip -selection clipboard
+    echo "✅ Copied to clipboard using xclip"
+    return 0
+  fi
+
+  # Try macOS clipboard (pbcopy)
+  if command -v pbcopy &> /dev/null; then
+    echo "$content" | pbcopy
+    echo "✅ Copied to clipboard using pbcopy"
+    return 0
+  fi
+
+  # Try Windows clipboard (clip.exe)
+  if command -v clip.exe &> /dev/null; then
+    echo "$content" | clip.exe
+    echo "✅ Copied to clipboard using clip.exe"
+    return 0
+  fi
+
+  # Try Windows Subsystem for Linux with PowerShell (clip)
+  if command -v clip &> /dev/null; then
+    echo "$content" | clip
+    echo "✅ Copied to clipboard using clip"
+    return 0
+  fi
+
+  # If no clipboard command is available
+  echo "❌ No clipboard command found. Available clipboard commands are:"
+  echo "   - wl-copy (Wayland)"
+  echo "   - xclip (X11)"
+  echo "   - pbcopy (macOS)"
+  echo "   - clip.exe/clip (Windows/WSL)"
+  return 1
+}
+
+# Parse arguments
+TEXT_MODE=false
+FILE_PATH=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h | --help)
+      usage
+      ;;
+    -t | --text)
+      TEXT_MODE=true
+      shift
+      FILE_PATH="$1"
+      shift
+      ;;
+    *)
+      FILE_PATH="$1"
+      shift
+      ;;
+  esac
+done
+
+# Validate input
+if [[ -z "$FILE_PATH" ]]; then
+  echo "❌ Error: No input provided"
+  usage
+fi
+
+# Copy content based on mode
+if $TEXT_MODE; then
+  copy_to_clipboard "$FILE_PATH"
+else
+  # Check if file exists
+  if [[ ! -f "$FILE_PATH" ]]; then
+    echo "❌ Error: File '$FILE_PATH' not found"
+    exit 1
+  fi
+
+  # Check if file is readable
+  if [[ ! -r "$FILE_PATH" ]]; then
+    echo "❌ Error: Cannot read file '$FILE_PATH' (permission denied)"
+    exit 1
+  fi
+
+  # Read file and copy content
+  content=$(cat "$FILE_PATH")
+  copy_to_clipboard "$content"
+  echo "📄 Source: $FILE_PATH"
+fi

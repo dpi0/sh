@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+# Global variables
+UPLOAD_URL="https://bin.dpi0.cloud"
+FILEPATH="$1"
+
+# Ensure a file is provided
+if [[ -z "$FILEPATH" || ! -f "$FILEPATH" ]]; then
+  echo "Error: Valid file required."
+  echo "Usage: $0 /path/to/file"
+  exit 1
+fi
+
+# Check file size
+FILE_SIZE=$(du -k "$FILEPATH" | cut -f1)
+if [[ $FILE_SIZE -gt 10000 ]]; then # 10MB limit example
+  echo "Warning: File is $(($FILE_SIZE / 1024))MB. Continue? (y/n)"
+  read -r answer
+  [[ "$answer" != "y" ]] && exit 0
+fi
+
+# Extract filename and extension
+FILENAME="$(basename -- "$FILEPATH")"
+EXTENSION="${FILENAME##*.}"
+
+# Determine content type based on extension
+case "$EXTENSION" in
+  jpg | jpeg) CONTENT_TYPE="image/jpeg" ;;
+  png) CONTENT_TYPE="image/png" ;;
+  pdf) CONTENT_TYPE="application/pdf" ;;
+  *) CONTENT_TYPE="application/octet-stream" ;;
+esac
+
+# Upload file with progress bar
+RESPONSE=$(curl --silent --fail --show-error \
+  --header "Content-Type: $CONTENT_TYPE" \
+  --progress-bar \
+  --data-binary @"$FILEPATH" \
+  --url "$UPLOAD_URL")
+
+[[ -z "$RESPONSE" || "$RESPONSE" == *"error"* ]] && {
+  echo "Error: Upload failed."
+  exit 1
+}
+
+# Construct file URL
+FILE_URL="$UPLOAD_URL/p$RESPONSE.$EXTENSION"
+
+# Copy URL to clipboard based on OS
+if command -v wl-copy &> /dev/null; then
+  echo "$FILE_URL" | wl-copy
+elif command -v pbcopy &> /dev/null; then
+  echo "$FILE_URL" | pbcopy
+elif command -v clip &> /dev/null; then
+  echo "$FILE_URL" | clip
+fi
+
+# Show notification based on OS
+if command -v notify-send &> /dev/null; then
+  notify-send "✅ Upload Successful" "URL copied: $FILE_URL"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  osascript -e "display notification \"URL copied: $FILE_URL\" with title \"✅ Upload Successful\""
+fi
+
+# Output URL
+echo "$FILE_URL"
+
+# #!/usr/bin/env bash
+#
+# # Global variables
+# UPLOAD_URL="https://bin.dpi0.cloud"
+# FILEPATH="$1"
+#
+# # Ensure a file is provided
+# if [[ -z "$FILEPATH" || ! -f "$FILEPATH" ]]; then
+#   echo "Error: Valid file required."
+#   echo "Usage: $0 /path/to/file"
+#   exit 1
+# fi
+#
+# # Extract filename and extension
+# FILENAME="$(basename -- "$FILEPATH")"
+# EXTENSION="${FILENAME##*.}"
+#
+# # Upload file
+# RESPONSE=$(curl --silent --fail --show-error --data-binary @"$FILEPATH" --url "$UPLOAD_URL")
+# [[ -z "$RESPONSE" || "$RESPONSE" == *"error"* ]] && {
+#   echo "Error: Upload failed."
+#   exit 1
+# }
+#
+# # Construct file URL
+# FILE_URL="$UPLOAD_URL/p$RESPONSE.$EXTENSION"
+#
+# # Copy URL to clipboard if available
+# command -v wl-copy &> /dev/null && echo "$FILE_URL" | wl-copy
+#
+# # Show notification if available
+# command -v notify-send &> /dev/null && notify-send "✅ Upload Successful" "URL copied: $FILE_URL"
+#
+# # Output URL
+# echo "$FILE_URL"

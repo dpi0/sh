@@ -1,0 +1,53 @@
+# https://www.baeldung.com/linux/moving-files-showing-progress
+# #!/usr/bin/env bash
+#
+# # Safety check
+# [ "$#" -eq 0 ] && "No input files" && exit 1
+#
+# rsync -aP --remove-source-files "$@" && rm -rf "${@:1:$#-1}"
+
+# CLAUDE
+#!/usr/bin/env bash
+
+# Display usage if no arguments provided
+if [ "$#" -lt 2 ]; then
+  echo "Usage: $0 SOURCE... DESTINATION" >&2
+  exit 1
+fi
+
+# Get the destination (last argument)
+destination="${@: -1}"
+# Get all sources except the last argument
+sources=("${@:1:$#-1}")
+
+# Check if destination exists and is a directory when moving multiple sources
+if [ ${#sources[@]} -gt 1 ] && [ ! -d "$destination" ]; then
+  echo "Error: When moving multiple sources, destination must be a directory" >&2
+  exit 1
+fi
+
+# Use rsync with options to better mimic mv:
+# -a (archive) preserves permissions, timestamps, etc.
+# -H preserves hard links
+# --acls preserves ACLs
+# --xattrs preserves extended attributes
+# -P shows progress
+# --remove-source-files removes source files after successful transfer
+rsync -aHAXP --remove-source-files "${sources[@]}" "$destination"
+status=$?
+
+# Check if rsync succeeded
+if [ $status -ne 0 ]; then
+  echo "Error: rsync failed with status $status" >&2
+  exit $status
+fi
+
+# Clean up empty source directories if any
+# This is needed because --remove-source-files only removes files, not directories
+for src in "${sources[@]}"; do
+  if [ -d "$src" ] && [ -z "$(ls -A "$src")" ]; then
+    rmdir "$src" 2> /dev/null
+  fi
+done
+
+exit 0

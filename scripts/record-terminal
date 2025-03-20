@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+set -e # Exit if any command fails
+
+# Configuration
+OUTPUT_DIR="$HOME/Screenshots/recordings"
+THEME="monokai"
+FONT_FAMILY="JetBrainsMono Nerd Font"
+FONT_SIZE=28
+TERMINAL_WIDTH=100
+TERMINAL_HEIGHT=30
+
+# Create the directory if it doesn't exist
+mkdir -p "$OUTPUT_DIR"
+
+# Generate the timestamp and filename
+timestamp=$(date +'%d-%m-%Y_%H-%M-%S')
+filename="Terminal_Recording_$timestamp.cast"
+filepath="$OUTPUT_DIR/$filename"
+gif_filepath="${filepath%.cast}.gif"
+
+echo "🎥 Recording terminal session..."
+echo "📂 Output will be saved to: $filepath"
+echo "⚙️  Press Ctrl+D to stop recording"
+echo ""
+
+# Check if required commands exist
+for cmd in asciinema agg; do
+  if ! command -v $cmd &> /dev/null; then
+    echo "❌ Error: Required command '$cmd' not found."
+    echo "Please install the missing dependency and try again."
+    exit 1
+  fi
+done
+
+# Record the terminal session
+asciinema rec --tty-size=${TERMINAL_WIDTH}x${TERMINAL_HEIGHT} --title="terminal-$timestamp" "$filepath"
+
+# After recording, convert to GIF
+echo "🔄 Converting recording to GIF..."
+if agg --theme "$THEME" --font-size "$FONT_SIZE" --font-family "$FONT_FAMILY" "$filepath" "$gif_filepath"; then
+  echo "✅ GIF created: $gif_filepath"
+else
+  echo "❌ Failed to create GIF"
+  exit 1
+fi
+
+# Prompt to upload the GIF with default to yes
+read -p "📤 Upload ${gif_filepath} to bin.dpi0.cloud? [Y/n]: " upload_choice
+if [[ "$upload_choice" =~ ^[Nn]$ ]]; then
+  echo "⏭️  Skipping upload"
+else
+  if command -v pst &> /dev/null; then
+    echo "🔄 Uploading GIF..."
+    pst "$gif_filepath"
+  else
+    echo "⚠️  pst command not found. Skipping upload."
+  fi
+fi
+
+# Prompt to remove the original recording file with default to yes
+read -p "🗑️  Remove original recording file ($filename)? [Y/n]: " remove_choice
+if [[ "$remove_choice" =~ ^[Nn]$ ]]; then
+  echo "💾 Keeping original recording: $filepath"
+else
+  rm "$filepath"
+  echo "🗑️  Removed original recording: $filepath"
+fi
+
+echo "✨ All done!"
