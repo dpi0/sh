@@ -41,3 +41,6 @@ link "$SHELL_DIR/lazygit/config.yml" "$CONFIG_DIR/lazygit/config.yml"
 link "$SHELL_DIR/zsh/.zshrc" "$HOME/.zshrc"
 
 echo "✅ Dotfiles installation complete."
+
+echo -e "\n 🔵 Essential programs required for proper functioning"
+echo "bat, eza, fd, fzf, git, jq, lazygit, rsync, tmux, neovim, yazi, zoxide"

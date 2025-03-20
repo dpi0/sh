@@ -23,6 +23,7 @@ set_locale_and_timezone() {
   chroot /mnt locale-gen
   chroot /mnt echo "LANG=$LOCALE_LANG" > /etc/default/locale
   chroot /mnt echo "KEYMAP=$KEYMAP" > /etc/vconsole.conf
+  chroot /mnt localectl set-locale LANG=en_US.UTF-8
 }
 
 partitioning() {
