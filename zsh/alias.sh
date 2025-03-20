@@ -10,7 +10,7 @@ alias rec='asciinema rec'
 alias img='loupe'
 alias image='loupe'
 alias yless="jless --yaml"
-alias copy="wl-copy"
+# alias copy="wl-copy"
 alias lf="yazi"
 alias notes="note"
 alias send-to-phone="qrcp"
@@ -41,7 +41,7 @@ fi
 
 if command -v rsync &> /dev/null; then
   alias cp='rsync -avh --progress --itemize-changes --stats'
-  alias mvv='rsync -avh --remove-source-files --progress --itemize-changes --stats'
+  # alias mvv='rsync -avh --remove-source-files --progress --itemize-changes --stats'
 fi
 
 #alias rm="rm -iv"
@@ -372,19 +372,19 @@ alias pqs='pacman -Qs'                               # Search for a package or p
 alias py="python3"
 alias pipf="pip freeze"
 alias pipr="pip freeze > requirements.txt"
-alias ponew="poetry new"
-alias poin="poetry add"
-alias por="poetry remove"
-alias pou="poetry update"
-alias porun="poetry run"
-alias poinstall="poetry install"
-alias poin="poetry init"
-alias pol="poetry show -tlav"
-alias pos="poetry shell"
-alias posh="poetry search"
-alias polock="poetry lock"
-alias pov="poetry version"
-alias poab="poetry about"
+# alias ponew="poetry new"
+# alias poin="poetry add"
+# alias por="poetry remove"
+# alias pou="poetry update"
+# alias porun="poetry run"
+# alias poinstall="poetry install"
+# alias poin="poetry init"
+# alias pol="poetry show -tlav"
+# alias pos="poetry shell"
+# alias posh="poetry search"
+# alias polock="poetry lock"
+# alias pov="poetry version"
+# alias poab="poetry about"
 
 # SYSTEMCTL
 
