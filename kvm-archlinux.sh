@@ -18,16 +18,16 @@ USER_PASSWORD="user"
 check_root() { [[ $(id -u) -eq 0 ]] || { echo "ERROR: Run this script as root"; exit 1; }; }
 check_uefi() { [[ -d /sys/firmware/efi ]] || { echo "ERROR: UEFI required"; exit 1; }; }
 
-echo "   ###    ########   ######  ##     ##    ##       #### ##    ## ##     ## ##     ## ";
-echo "  ## ##   ##     ## ##    ## ##     ##    ##        ##  ###   ## ##     ##  ##   ##  ";
-echo " ##   ##  ##     ## ##       ##     ##    ##        ##  ####  ## ##     ##   ## ##   ";
-echo "##     ## ########  ##       #########    ##        ##  ## ## ## ##     ##    ###    ";
-echo "######### ##   ##   ##       ##     ##    ##        ##  ##  #### ##     ##   ## ##   ";
-echo "##     ## ##    ##  ##    ## ##     ##    ##        ##  ##   ### ##     ##  ##   ##  ";
-echo "##     ## ##     ##  ######  ##     ##    ######## #### ##    ##  #######  ##     ## ";
+echo " █████╗ ██████╗  ██████╗██╗  ██╗    ██╗     ██╗███╗   ██╗██╗   ██╗██╗  ██╗";
+echo "██╔══██╗██╔══██╗██╔════╝██║  ██║    ██║     ██║████╗  ██║██║   ██║╚██╗██╔╝";
+echo "███████║██████╔╝██║     ███████║    ██║     ██║██╔██╗ ██║██║   ██║ ╚███╔╝ ";
+echo "██╔══██║██╔══██╗██║     ██╔══██║    ██║     ██║██║╚██╗██║██║   ██║ ██╔██╗ ";
+echo "██║  ██║██║  ██║╚██████╗██║  ██║    ███████╗██║██║ ╚████║╚██████╔╝██╔╝ ██╗";
+echo "╚═╝  ╚═╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝    ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝";
+echo "                                                                          ";
 
 preliminary_setup() {
-  setfont "$FONT"
+  # setfont "$FONT"
   loadkeys "$KEYMAP"
   timedatectl set-timezone "$TIMEZONE"
   timedatectl set-ntp true
@@ -45,7 +45,7 @@ partitioning() {
 }
 
 install_base() {
-  pacstrap /mnt base linux-lts vim sudo less intel-ucode
+  pacstrap /mnt base linux-lts vim sudo less intel-ucode qemu-guest-agent
   genfstab -U /mnt >> /mnt/etc/fstab
 }
 
