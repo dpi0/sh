@@ -34,7 +34,6 @@ local plugins = {
   require("plugins.which-key"), -- Displays available keybindings.
   require("plugins.todo"), -- Todo.
   require("plugins.yazi"), -- Yazi.
-  -- require("plugins.lazygit"), -- Lazygit.
   require("plugins.diff"), -- Better diff (than gitsigns).
   require("plugins.surround"), -- Surround.
   require("plugins.flash-jump"), -- Jump quickly to text.
@@ -42,12 +41,14 @@ local plugins = {
   require("plugins.snacks"), -- QoL
   require("plugins.session"), -- Manage sessions.
   require("plugins.zen"), -- Center.
+  require("plugins.upload"), -- Upload selected text/file/image.
 }
 
 -- Conditionally add if hostname is "arch"
 if hostname == "arch" then
-  table.insert(plugins, require("plugins.harpoon")) -- Quickly switch b/w multiple files.
+  -- TELESCOPE requires build-essential (debian, ~300M) or base-devel (arch, ~260M)
   table.insert(plugins, require("plugins.telescope")) -- Fuzzy finder and picker.
+  table.insert(plugins, require("plugins.harpoon")) -- Quickly switch b/w multiple files.
   table.insert(plugins, require("plugins.lsp")) -- Language Server Protocol.
   table.insert(plugins, require("plugins.treesitter")) -- Better syntax highlighting and code understanding.
   table.insert(plugins, require("plugins.autocompletion")) -- Autocompletion support.
@@ -58,6 +59,10 @@ if hostname == "arch" then
   table.insert(plugins, require("plugins.clipboard")) -- Neogit clipboard.
   table.insert(plugins, require("plugins.diagnose")) -- Diagnosis Trouble.
   -- table.insert(plugins, require("plugins.noice")) -- Noice.
+  table.insert(plugins, require("plugins.activity-watcher")) -- Activity Tracker Watcher Plugin.
+  table.insert(plugins, require("plugins.obsidian")) -- Obsidian.
+  table.insert(plugins, require("plugins.fim")) -- Obsidian.
+  table.insert(plugins, require("plugins.markdown-keybinds")) -- Markdown Keybinds.
 end
 
 -- Load all plugins at once

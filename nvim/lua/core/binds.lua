@@ -79,8 +79,8 @@ bind("n", "<A-a>", "<C-^>", "Switch to last buffer")
 bind("i", "<A-a>", "<C-^>", "Switch to last buffer")
 
 -- Scroll and center
--- bind("n", "<C-d>", "<C-d>zz", "Scroll down and center")
--- bind("n", "<C-u>", "<C-u>zz", "Scroll up and center")
+bind("n", "<C-d>", "<C-d>zz", "Scroll down and center")
+bind("n", "<C-u>", "<C-u>zz", "Scroll up and center")
 bind("n", "n", "nzzzv", "Next search result centered")
 bind("n", "N", "Nzzzv", "Previous search result centered")
 
