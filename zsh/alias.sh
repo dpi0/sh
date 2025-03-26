@@ -166,8 +166,40 @@ alias kb="kubectl"
 
 # GIT
 
-alias gi='git init'
+alias uncommit="git reset HEAD~1"             # Undo the last commit, keep changes staged
+alias recommit="git commit --amend --no-edit" # Amend last commit without changing message
+alias editcommit="git commit --amend"         # Amend last commit and edit message
+alias gundo="git reset --soft HEAD~1"         # Undo last commit, keep changes staged
+alias ghundo="git reset --hard HEAD~1"        # Undo last commit and discard changes
+# alias ghist="git log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short"
+# alias glast="git log -1 --stat"
+alias gopen='xdg-open $(git remote get-url origin | sed "s/git@github.com:/https:\/\/github.com\//" | sed "s/.git$//")'
+
+# https://github.com/wfxr/forgit?tab=readme-ov-file#shell-aliases
 forgit_ignore=gii
+forgit_log=glo
+forgit_reflog=grl
+forgit_diff=gd
+forgit_show=gso
+forgit_add=ga
+forgit_reset_head=grh
+forgit_ignore=gi
+forgit_attributes=gat
+forgit_checkout_file=gcf
+forgit_checkout_branch=gcb
+forgit_branch_delete=gbd
+forgit_checkout_tag=gct
+forgit_checkout_commit=gco
+forgit_revert_commit=grc
+forgit_clean=gclean
+forgit_stash_show=gss
+forgit_stash_push=gsp
+forgit_cherry_pick=gcp
+forgit_rebase=grb
+forgit_blame=gbl
+forgit_fixup=gfu
+
+alias ginit='git init'
 
 # GIT ADD
 alias ga='git add'
@@ -211,17 +243,17 @@ alias gf='git fetch'
 alias gfo='git fetch origin'
 
 # GIT LOG
-alias glgg='git log --graph'
-alias glgga='git log --graph --decorate --all'
-alias glgm='git log --graph --max-count=10'
+# alias glgg='git log --graph'
+# alias glgga='git log --graph --decorate --all'
+# alias glgm='git log --graph --max-count=10'
 # alias glods='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset" --date=short'
 # alias glod='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ad) %C(bold blue)<%an>%Creset"'
 # alias glola='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset" --all'
 # alias glols='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset" --stat'
 # alias glol='git log --graph --pretty="%Cred%h%Creset -%C(auto)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset"'
 # alias glo='git log --oneline --decorate'
-alias glog='git log --oneline --decorate --graph'
-alias gloga='git log --oneline --decorate --graph --all'
+# alias glog='git log --oneline --decorate --graph'
+# alias gloga='git log --oneline --decorate --graph --all'
 
 # GIT MERGE
 alias gm='git merge'
@@ -286,8 +318,8 @@ alias grmc='git rm --cached'
 alias gsh='git show'
 
 # GIT STASH
-alias gstall='git stash --all'
-alias gstaa='git stash apply'
+alias gsta='git stash --all'
+alias gstap='git stash apply'
 alias gstc='git stash clear'
 alias gstd='git stash drop'
 alias gstl='git stash list'

@@ -49,6 +49,47 @@ speedtest_curl() {
   curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
 }
 
+s() {
+  search_term="$1"
+
+  SELECTED_FILE=$(
+    fd . $HOME --type f --hidden --follow --color=always \
+      --exclude ".rustup" \
+      --exclude "node_modules" \
+      --exclude ".cargo" \
+      --exclude ".continue" \
+      --exclude ".cargo" \
+      --exclude "go/pkg/mod" \
+      --exclude ".npm" \
+      --exclude ".cache" |
+      fzf \
+        --query="$search_term" \
+        --exact \
+        --extended \
+        --preview="bat --style=numbers --color=always --line-range :500 {}" \
+        --preview-window="right:50%" \
+        --ansi
+  )
+
+  if [ -n "$SELECTED_FILE" ]; then
+    file_extension="${SELECTED_FILE##*.}"
+
+    case "$file_extension" in
+      pdf) evince "$SELECTED_FILE" ;;
+      jpg | jpeg | png | gif | bmp | webp) (command -v loupe &> /dev/null && loupe "$SELECTED_FILE") || (command -v org.kde.gwenview &> /dev/null && org.kde.gwenview "$SELECTED_FILE") ;;
+      mp4 | mkv | avi | webm) mpv "$SELECTED_FILE" ;;
+      txt | py | rs | go | md) (command -v nvim &> /dev/null && nvim "$SELECTED_FILE") || vim "$SELECTED_FILE" ;;
+      *) (command -v nvim &> /dev/null && nvim "$SELECTED_FILE") || vim "$SELECTED_FILE" ;;
+    esac
+
+    # Copy file path to clipboard if wl-copy is available
+    command -v wl-copy &> /dev/null && echo "$SELECTED_FILE" | wl-copy
+
+    # Print the file path
+    echo "$SELECTED_FILE"
+  fi
+}
+
 f() {
   search_term="$1"
 
@@ -156,16 +197,16 @@ remove_variable_from_history() {
   exec zsh
 }
 
-fh() {
-  selected_command=$(history -E 1 | sort -k1,1nr | fzf | awk '{$1=""; $2=""; $3=""; print $0}' | sed 's/^[ \t]*//')
-
-  # Check if wl-copy is installed
-  if command -v wl-copy &> /dev/null; then
-    echo "$selected_command" | wl-copy
-  else
-    echo "wl-copy is not installed. Cannot copy to clipboard."
-  fi
-}
+# fh() {
+#   selected_command=$(history -E 1 | sort -k1,1nr | fzf | awk '{$1=""; $2=""; $3=""; print $0}' | sed 's/^[ \t]*//')
+#
+#   # Check if wl-copy is installed
+#   if command -v wl-copy &> /dev/null; then
+#     echo "$selected_command" | wl-copy
+#   else
+#     echo "wl-copy is not installed. Cannot copy to clipboard."
+#   fi
+# }
 
 finh() {
   cat /var/log/pacman.log | grep -E "\[ALPM\] (installed|removed|upgraded|upgraded|downgraded)" | awk '{print $1, $2, $3, $4, $5, $6}' | sort -r | fzf
@@ -178,60 +219,6 @@ fin() {
 
 in() {
   pacman -Slq | fzf -q "$1" -m --preview 'pacman -Si {1}' | xargs -ro pacman -S
-}
-
-extract() {
-  if [ -f "$1" ]; then
-    local target_dir="${2:-.}"
-
-    # Create the target directory if it doesn't exist
-    if [ ! -d "$target_dir" ]; then
-      mkdir -p "$target_dir"
-    fi
-
-    case "$1" in
-      *.zip) unzip "$1" -d "$target_dir" ;;
-      *.tar.gz) tar -xzvf "$1" -C "$target_dir" ;;
-      *.tar.xz) tar -xJf "$1" -C "$target_dir" ;;
-      *.tar.bz2) tar -xjvf "$1" -C "$target_dir" ;;
-      *.tar) tar -xvf "$1" -C "$target_dir" ;;
-      *) echo "Unsupported format" ;;
-    esac
-
-  else
-    echo "'$1' is not a valid file"
-  fi
-}
-
-compress() {
-  if [ "$#" -lt 3 ]; then
-    echo "Usage: compress_files <file1> <file2> ... <output-file>"
-    echo "   or: compress_files * <output-file>"
-    return 1
-  fi
-
-  local files=()
-  local output_file=""
-
-  # Check if the first argument is an asterisk (*)
-  if [ "$1" = "*" ]; then
-    files=("${@:2:$#-2}")
-  else
-    files=("${@:1:$#-1}")
-  fi
-
-  output_file="${!#}"
-
-  # Check if 'zip' command is available
-  if command -v zip &> /dev/null; then
-    local extension=".zip"
-    zip -r "$output_file$extension" "${files[@]}"
-  else
-    local extension=".tar.gz"
-    eval "tar -czvf '$output_file$extension' ${files[@]}"
-  fi
-
-  echo "Compression operation completed successfully. Output file: $output_file$extension"
 }
 
 # launch-waybar(){
@@ -251,22 +238,40 @@ compress() {
 
 # Function to create or open a note in $HOME/Notes/docs directory
 note() {
-  local note_path="$HOME/Notes/docs/$1.md"
+  local note_path="$HOME/notes/docs/$1.md"
   if [[ -f "$note_path" ]]; then
     # If the note exists, open it in neovim
     nvim "$note_path"
   else
     # Create a new note and open it in neovim
     mkdir -p "$(dirname "$note_path")" # Ensure the directory exists
-    touch "$note_path"
-    nvim "$note_path"
+
+    # Get the current date in YYYY-MM-DD format
+    local current_date
+    current_date=$(date +"%Y-%m-%d")
+
+    # Predefine the template
+    cat << EOF > "$note_path"
+---
+title: "$1"
+date: $current_date
+tags: []
+---
+
+EOF
+
+    # Open in neovim and switch to insert mode at the last line
+    # nvim +"normal G$" +"startinsert" "$note_path"
+    # nvim +"normal G$o" +"startinsert" "$note_path"
+    nvim +"normal Go" +"startinsert" "$note_path"
+
   fi
 }
 
 # Function to enable autocompletion for the `note` command
 _note_autocomplete() {
   local cur_word="${1}" # Current word typed
-  local notes_dir="$HOME/Notes/docs"
+  local notes_dir="$HOME/notes/docs"
 
   # List all files and directories in the notes directory
   local suggestions=($(find "$notes_dir" -type d -mindepth 1 -maxdepth 2 | sed "s|$notes_dir/||"))
@@ -280,20 +285,3 @@ _note_autocomplete() {
 
 # Bind autocompletion to the note function
 compdef _note_autocomplete note
-
-function sesh-sessions() {
-  {
-    exec < /dev/tty
-    exec <&1
-    local session
-    session=$(sesh list -t -c | fzf --height 40% --reverse --border-label ' sesh ' --border --prompt '⚡  ')
-    zle reset-prompt > /dev/null 2>&1 || true
-    [[ -z "$session" ]] && return
-    sesh connect $session
-  }
-}
-
-zle -N sesh-sessions
-bindkey -M emacs '\es' sesh-sessions
-bindkey -M vicmd '\es' sesh-sessions
-bindkey -M viins '\es' sesh-sessions

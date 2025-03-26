@@ -31,6 +31,7 @@ export CONFIG="$HOME/.config"
 export SCRIPTS="$HOME/scripts"
 export VOLUMES="$HOME/docker_volumes"
 export EDITOR="/usr/bin/nvim"
+export TERMINAL=/usr/bin/foot
 export GPG_TTY=$(tty)
 export PIPENV_VENV_IN_PROJECT=0
 if command -v vivid &>/dev/null; then
