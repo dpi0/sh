@@ -31,7 +31,7 @@ preliminary_setup() {
   loadkeys "$KEYMAP"
   timedatectl set-timezone "$TIMEZONE"
   timedatectl set-ntp true
-  reflector --verbose -c India -l 10 -p https --sort rate --save /etc/pacman.d/mirrorlist
+  # reflector --verbose -c India -l 10 -p https --sort rate --save /etc/pacman.d/mirrorlist
 }
 
 partitioning() {
