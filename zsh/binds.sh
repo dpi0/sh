@@ -6,6 +6,7 @@
 # -----------------------------------------
 
 bindkey -e # sets the ZLE to use Emacs key bindings
+# bindkey -v                          # Enable vi keybindings
 
 
 go_forward_in_words() {
@@ -56,7 +57,7 @@ bindkey '^[[B' history-substring-search-down
 bindkey -s '^[v' 'v .^M'
 bindkey -s '^[c' 'code .^M'
 bindkey -s '^[m' 'lf .^M'
-bindkey -s '^[n' 'lz^M'
+bindkey -s '^[u' 'lz^M'
 
 # Bind Shift+HJKL to cursor movements
 #bindkey -s '^[H' '^[OA'  # Shift+H -> Up
@@ -66,6 +67,11 @@ bindkey -s '^[n' 'lz^M'
 
 # Bind Ctrl+k to history up (previous command)
 bindkey '^k' up-line-or-history
+# bindkey 'K' up-line-or-history
 
 # Bind Ctrl+j to history down (next command)
 bindkey '^j' down-line-or-history
+# bindkey 'J' down-line-or-history
+
+# bindkey '^h' backward-char           # H → Move cursor left
+# bindkey '^l' forward-char            # L → Move cursor right
