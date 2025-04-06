@@ -3,87 +3,107 @@ return {
   branch = "harpoon2",
   dependencies = { "nvim-lua/plenary.nvim" },
 
+  keys = {
+    {
+      "<A-S-e>",
+      function()
+        require("harpoon"):list():add()
+      end,
+      desc = "Add current buffer to harpoon list",
+    },
+    {
+      "<A-1>",
+      function()
+        require("harpoon"):list():select(1)
+      end,
+      desc = "Harpoon file 1",
+    },
+    {
+      "<A-2>",
+      function()
+        require("harpoon"):list():select(2)
+      end,
+      desc = "Harpoon file 2",
+    },
+    {
+      "<A-3>",
+      function()
+        require("harpoon"):list():select(3)
+      end,
+      desc = "Harpoon file 3",
+    },
+    {
+      "<A-4>",
+      function()
+        require("harpoon"):list():select(4)
+      end,
+      desc = "Harpoon file 4",
+    },
+    {
+      "<A-0>",
+      function()
+        require("harpoon"):list():select(5)
+      end,
+      desc = "Harpoon file 5",
+    },
+    {
+      "<A-9>",
+      function()
+        require("harpoon"):list():select(6)
+      end,
+      desc = "Harpoon file 6",
+    },
+    {
+      "<A-8>",
+      function()
+        require("harpoon"):list():select(7)
+      end,
+      desc = "Harpoon file 7",
+    },
+  },
+
   config = function()
     local harpoon = require("harpoon")
+    local fzf = require("fzf-lua")
+
     harpoon:setup({})
 
-    -- basic telescope configuration
-    local conf = require("telescope.config").values
-    local function toggle_telescope(harpoon_files)
-      local file_paths = {}
-      local finder = function()
-        local paths = {}
-        for _, item in ipairs(harpoon_files.items) do
-          table.insert(paths, item.value)
-        end
-
-        return require("telescope.finders").new_table({
-          results = paths,
-        })
+    local function open_harpoon_fzf()
+      local list = harpoon:list()
+      local items = {}
+      for i, item in ipairs(list.items) do
+        table.insert(items, string.format("%d: %s", i, item.value))
       end
 
-      for _, item in ipairs(harpoon_files.items) do
-        table.insert(file_paths, item.value)
-      end
-
-      require("telescope.pickers")
-        .new({}, {
-          prompt_title = "Harpoon",
-          finder = require("telescope.finders").new_table({
-            results = file_paths,
-          }),
-          -- finder = finder(),
-          previewer = conf.file_previewer({}),
-          sorter = conf.generic_sorter({}),
-          attach_mappings = function(prompt_bufnr, map)
-            map("i", "<C-d>", function()
-              local state = require("telescope.actions.state")
-              local selected_entry = state.get_selected_entry()
-              local current_picker = state.get_current_picker(prompt_bufnr)
-
-              table.remove(harpoon_files.items, selected_entry.index)
-              current_picker:refresh(finder())
-            end)
-            return true
+      fzf.fzf_exec(items, {
+        prompt = "Harpoon> ",
+        actions = {
+          ["default"] = function(selected)
+            local index = tonumber(selected[1]:match("^(%d+):"))
+            if index then
+              list:select(index)
+            end
           end,
-        })
-        :find()
+          ["ctrl-d"] = function(selected)
+            local index = tonumber(selected[1]:match("^(%d+):"))
+            if index then
+              table.remove(list.items, index)
+              open_harpoon_fzf()
+            end
+          end,
+        },
+        winopts = {
+          height = 0.3,
+          width = 0.3,
+          row = 0.5,
+          col = 0.5,
+          anchor = "CENTER",
+          border = "rounded",
+          preview = { hidden = true },
+        },
+      })
     end
 
-    vim.keymap.set("n", "<A-e>", function()
-      toggle_telescope(harpoon:list())
-    end, { desc = "Open harpoon window" })
-
-    vim.keymap.set("n", "<A-S-e>", function()
-      harpoon:list():add()
-    end, { desc = "Add current buffer to harpoon list" })
-
-    vim.keymap.set("n", "<A-1>", function()
-      harpoon:list():select(1)
-    end)
-
-    vim.keymap.set("n", "<A-2>", function()
-      harpoon:list():select(2)
-    end)
-
-    vim.keymap.set("n", "<A-3>", function()
-      harpoon:list():select(3)
-    end)
-
-    vim.keymap.set("n", "<A-4>", function()
-      harpoon:list():select(4)
-    end)
-
-    vim.keymap.set("n", "<A-0>", function()
-      harpoon:list():select(5)
-    end)
-
-    vim.keymap.set("n", "<A-9>", function()
-      harpoon:list():select(6)
-    end)
-
-    vim.keymap.set("n", "<A-8>", function()
-      harpoon:list():select(7)
-    end)
+    vim.keymap.set("n", "<A-e>", open_harpoon_fzf, { desc = "Open Harpoon (FZF)" })
   end,
 }

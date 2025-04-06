@@ -28,41 +28,45 @@ local plugins = {
   require("plugins.indent"), -- Displays indentation guides.
   require("plugins.lualine"), -- Statusline enhancement.
   require("plugins.multicursors"), -- Enables multiple cursors for editing.
-  require("plugins.neoterm"), -- Manages terminal buffers.
+  -- require("plugins.neoterm"), -- Manages terminal buffers.
   require("plugins.oil"), -- File explorer integration.
-  require("plugins.todo-comments"), -- Highlights codes, comments etc
+  -- require("plugins.todo-comments"), -- Highlights codes, comments etc
   require("plugins.which-key"), -- Displays available keybindings.
-  require("plugins.todo"), -- Todo.
+  -- require("plugins.todo"), -- Todo with Todone.
   require("plugins.yazi"), -- Yazi.
-  require("plugins.diff"), -- Better diff (than gitsigns).
+  -- require("plugins.diff"), -- Better diff (than gitsigns).
   require("plugins.surround"), -- Surround.
   require("plugins.flash-jump"), -- Jump quickly to text.
   -- require("plugins.fold"), -- Modern code folding.
-  require("plugins.snacks"), -- QoL
-  require("plugins.session"), -- Manage sessions.
+  require("plugins.snacks"), -- QoL.
+  -- require("plugins.session"), -- Manage sessions.
   require("plugins.zen"), -- Center.
-  require("plugins.upload"), -- Upload selected text/file/image.
+  require("plugins.upload"), -- Nup - Upload files, yanks and selections to WantGuns/bin.
+  -- require("plugins.file-manage-eunuch"), -- Perform various actions on the current file.
+  require("plugins.sudo"), -- Write/Edit to unprivileged files with sudo.
+  require("plugins.fzf"), -- Fzf lua.
+  -- require("plugins.git-vim-fugitive"), -- Vim-fugitive.
+  require("plugins.markdown-keybinds"), -- Markdown keybindings.
+  require("plugins.fim"), -- Floating Terminal.
+  require("plugins.harpoon"), -- Quickly switch b/w multiple files.
 }
 
 -- Conditionally add if hostname is "arch"
 if hostname == "arch" then
   -- TELESCOPE requires build-essential (debian, ~300M) or base-devel (arch, ~260M)
   table.insert(plugins, require("plugins.telescope")) -- Fuzzy finder and picker.
-  table.insert(plugins, require("plugins.harpoon")) -- Quickly switch b/w multiple files.
   table.insert(plugins, require("plugins.lsp")) -- Language Server Protocol.
   table.insert(plugins, require("plugins.treesitter")) -- Better syntax highlighting and code understanding.
   table.insert(plugins, require("plugins.autocompletion")) -- Autocompletion support.
   table.insert(plugins, require("plugins.none-ls-formatter")) -- Code formatting.
   table.insert(plugins, require("plugins.screenshot")) -- Screenshot code snippet.
   table.insert(plugins, require("plugins.markdown")) -- Markdown render.
-  table.insert(plugins, require("plugins.undo")) -- Telescope undo.
+  -- table.insert(plugins, require("plugins.undo")) -- Telescope undo.
   table.insert(plugins, require("plugins.clipboard")) -- Neogit clipboard.
   table.insert(plugins, require("plugins.diagnose")) -- Diagnosis Trouble.
   -- table.insert(plugins, require("plugins.noice")) -- Noice.
   table.insert(plugins, require("plugins.activity-watcher")) -- Activity Tracker Watcher Plugin.
   table.insert(plugins, require("plugins.obsidian")) -- Obsidian.
-  table.insert(plugins, require("plugins.fim")) -- Obsidian.
-  table.insert(plugins, require("plugins.markdown-keybinds")) -- Markdown Keybinds.
 end
 
 -- Load all plugins at once

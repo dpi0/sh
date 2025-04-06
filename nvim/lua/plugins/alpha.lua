@@ -4,7 +4,14 @@ return {
   dependencies = {
     "nvim-tree/nvim-web-devicons",
   },
-
+  keys = {
+    {
+      "<leader>a",
+      "<cmd>Alpha<CR>",
+      mode = "n",
+      desc = "Alpha Dashboard",
+    },
+  },
   config = function()
     local alpha = require("alpha")
     local dashboard = require("alpha.themes.dashboard")
@@ -23,14 +30,14 @@ return {
 
     -- Set menu
     dashboard.section.buttons.val = {
-      dashboard.button("r", "󱑍  > Recent files", ":Telescope oldfiles<CR>"),
+      dashboard.button("r", "󱑍  > Recent files", ":lua require('fzf-lua').oldfiles()<CR>"),
       dashboard.button("n", "  > New file", ":ene <BAR> startinsert <CR>"),
-      dashboard.button("f", "  > Find", ":cd $HOME | Telescope find_files<CR>"),
-      dashboard.button("g", "󰗧 " .. " > Grep", ":Telescope live_grep <CR>"),
-      dashboard.button("t", "󰐅 " .. " > Files", ":OilToggle <CR>"),
-      dashboard.button("v", "󰦛  > Restore session", '<cmd>lua require("persistence").load({ last = true })<CR>'),
+      dashboard.button("f", "  > Find", ":lua require('fzf-lua').files({ cwd = os.getenv('HOME') })<CR>"),
+      dashboard.button("g", "󰗧  > Grep", ":lua require('fzf-lua').live_grep()<CR>"),
+      dashboard.button("t", "󰐅  > Files", ":OilToggle<CR>"),
+      dashboard.button("v", "󰦛  > Restore session", ":lua require('persistence').load({ last = true })<CR>"),
       dashboard.button("s", "  > Settings", ":e $MYVIMRC | :cd %:p:h | split . | wincmd k | pwd<CR>"),
-      dashboard.button("l", "󰒲 " .. " > Lazy", ":Lazy<CR>"),
+      dashboard.button("l", "󰒲  > Lazy", ":Lazy<CR>"),
       dashboard.button("q", "  > Quit", ":qa<CR>"),
     }
 

@@ -164,10 +164,3 @@ if vim.fn.executable("taplo") == 1 then
 end
 
 -- vim.api.nvim_set_keymap("n", "A-C-f", "ggVGgq", { noremap = true, silent = true })
-
-bind("n", "<A-t>", ":Todo<CR>", "Todo")
-
-bind("n", "<leader>dfo", ":DiffviewOpen<CR>", "Diff Open")
-bind("n", "<leader>dfc", ":DiffviewClose<CR>", "Diff Close")
-
-bind("n", "<leader>cc", ":Telescope neoclip<CR>", "Clipboard")
