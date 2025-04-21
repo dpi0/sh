@@ -54,7 +54,7 @@ bindkey '^[[B' history-substring-search-down
 # zle -N sudo-command-line
 # bindkey "\e\e" sudo-command-line
 
-bindkey -s '^[v' 'v .^M'
+bindkey -s '^[v' 'v^M'
 bindkey -s '^[c' 'code .^M'
 bindkey -s '^[m' 'lf .^M'
 bindkey -s '^[u' 'lz^M'
