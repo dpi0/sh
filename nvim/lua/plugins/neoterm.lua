@@ -1,8 +1,8 @@
 return {
   {
-    "itmecho/neoterm.nvim",
+    'itmecho/neoterm.nvim',
     config = function()
-      require("neoterm").setup({
+      require('neoterm').setup {
         clear_on_run = true, -- run clear command before user specified commands
         noinsert = false, -- disable entering insert mode when opening the neoterm window
         -- position = "fullscreen",
@@ -10,11 +10,11 @@ return {
         -- position = "center",
         -- position = "top",
         -- position = "left",
-        position = "right",
+        position = 'right',
         -- mode = "vertical",
         width = 0.8,
         height = 0.8,
-      })
+      }
 
       -- Helper function for mappings
       local function bind(mode, lhs, rhs, opts)

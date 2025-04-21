@@ -1,10 +1,10 @@
 return {
-  "rebelot/kanagawa.nvim",
+  'rebelot/kanagawa.nvim',
   lazy = false,
   priority = 1000,
   config = function()
-    vim.cmd([[colorscheme kanagawa-wave]])
-    require("kanagawa").setup({
+    vim.cmd [[colorscheme kanagawa-wave]]
+    require('kanagawa').setup {
       compile = false, -- enable compiling the colorscheme
       undercurl = true, -- enable undercurls
       commentStyle = { italic = true },
@@ -22,15 +22,15 @@ return {
       -- overrides = function(colors) -- add/modify highlights
       --   return {}
       -- end,
-      theme = "wave", -- Load "wave" theme when 'background' option is not set
+      theme = 'wave', -- Load "wave" theme when 'background' option is not set
       background = { -- map the value of 'background' option to a theme
-        dark = "dragon", -- try "dragon" !
-        light = "lotus",
+        dark = 'dragon', -- try "dragon" !
+        light = 'lotus',
       },
-    })
-    vim.api.nvim_create_autocmd("VimEnter", {
+    }
+    vim.api.nvim_create_autocmd('VimEnter', {
       callback = function()
-        vim.cmd("colorscheme kanagawa-wave")
+        vim.cmd 'colorscheme kanagawa-wave'
       end,
     })
     -- vim.api.nvim_create_autocmd("BufEnter", {

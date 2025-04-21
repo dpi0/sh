@@ -4,7 +4,7 @@
 -- }
 
 return {
-  "folke/zen-mode.nvim",
+  'folke/zen-mode.nvim',
   opts = {
     window = {
       -- backdrop = 0.95, -- shade the backdrop of the Zen window. Set to 1 to keep the same as Normal
@@ -28,10 +28,10 @@ return {
     },
     keys = {
       vim.api.nvim_set_keymap(
-        "n",
-        "<leader>o",
-        "<cmd>ZenMode<cr>",
-        { silent = true, noremap = true, desc = "Toggle Zen Mode" }
+        'n',
+        '<leader>o',
+        '<cmd>ZenMode<cr>',
+        { silent = true, noremap = true, desc = 'Toggle Zen Mode' }
       ),
     },
   },

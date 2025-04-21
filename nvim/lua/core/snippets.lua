@@ -3,32 +3,32 @@
 -- ===============================
 
 -- Highlight text on yank
-vim.api.nvim_create_autocmd("TextYankPost", {
-	group = vim.api.nvim_create_augroup("YankHighlight", { clear = true }),
-	pattern = "*",
-	callback = function()
-		vim.highlight.on_yank()
-	end,
+vim.api.nvim_create_autocmd('TextYankPost', {
+  group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }),
+  pattern = '*',
+  callback = function()
+    vim.highlight.on_yank()
+  end,
 })
 
 -- ===========================
 -- Diagnostics Configuration
 -- ===========================
-vim.diagnostic.config({
-	virtual_text = {
-		prefix = "●",
-		format = function(diagnostic)
-			local code = diagnostic.code and string.format("[%s]", diagnostic.code) or ""
-			return string.format("%s %s", code, diagnostic.message)
-		end,
-	},
-	underline = false,
-	update_in_insert = true,
-	float = { source = "always" },
-})
+vim.diagnostic.config {
+  virtual_text = {
+    prefix = '●',
+    format = function(diagnostic)
+      local code = diagnostic.code and string.format('[%s]', diagnostic.code) or ''
+      return string.format('%s %s', code, diagnostic.message)
+    end,
+  },
+  underline = false,
+  update_in_insert = true,
+  float = { source = 'always' },
+}
 
 -- Make diagnostic background transparent
-vim.cmd("highlight DiagnosticVirtualText guibg=NONE")
+vim.cmd 'highlight DiagnosticVirtualText guibg=NONE'
 
 -- ===========================
 -- Prevent LSP from overwriting Treesitter colors

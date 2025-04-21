@@ -1,13 +1,13 @@
 return {
-  "nvim-telescope/telescope.nvim",
-  event = "VimEnter",
-  branch = "0.1.x",
+  'nvim-telescope/telescope.nvim',
+  event = 'VimEnter',
+  branch = '0.1.x',
   dependencies = {
-    "nvim-lua/plenary.nvim",
-    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
-    "nvim-tree/nvim-web-devicons",
-    "nvim-telescope/telescope-ui-select.nvim",
-    "folke/todo-comments.nvim",
+    'nvim-lua/plenary.nvim',
+    { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+    'nvim-tree/nvim-web-devicons',
+    'nvim-telescope/telescope-ui-select.nvim',
+    'folke/todo-comments.nvim',
   },
   keys = {
     -- {
@@ -93,64 +93,64 @@ return {
     -- { "<leader>cc", "<cmd>Telescope neoclip<CR>", desc = "Clipboard" },
   },
   config = function()
-    local telescope = require("telescope")
-    local actions = require("telescope.actions")
+    local telescope = require 'telescope'
+    local actions = require 'telescope.actions'
 
-    telescope.setup({
+    telescope.setup {
       defaults = {
         mappings = {
           i = {
-            ["<A-k>"] = actions.move_selection_previous,
-            ["<A-j>"] = actions.move_selection_next,
-            ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
-            ["<esc>"] = actions.close,
+            ['<A-k>'] = actions.move_selection_previous,
+            ['<A-j>'] = actions.move_selection_next,
+            ['<C-q>'] = actions.send_selected_to_qflist + actions.open_qflist,
+            ['<esc>'] = actions.close,
           },
         },
       },
       pickers = {
         live_grep = {
           file_ignore_patterns = {
-            "node_modules",
-            ".venv",
-            ".git/objects",
-            ".cargo",
-            ".cache",
-            ".local",
-            ".rustup",
-            ".mozilla",
-            ".continue",
-            "vscode",
+            'node_modules',
+            '.venv',
+            '.git/objects',
+            '.cargo',
+            '.cache',
+            '.local',
+            '.rustup',
+            '.mozilla',
+            '.continue',
+            'vscode',
           },
           additional_args = function(_)
-            return { "--hidden" }
+            return { '--hidden' }
           end,
         },
         find_files = {
           file_ignore_patterns = {
-            "node_modules",
-            ".git/objects",
-            ".venv",
-            ".cargo",
-            ".cache",
-            ".local",
-            ".rustup",
-            ".mozilla",
-            ".continue",
-            "vscode",
+            'node_modules',
+            '.git/objects',
+            '.venv',
+            '.cargo',
+            '.cache',
+            '.local',
+            '.rustup',
+            '.mozilla',
+            '.continue',
+            'vscode',
           },
           hidden = true,
         },
       },
       extensions = {
-        ["ui-select"] = require("telescope.themes").get_dropdown(),
+        ['ui-select'] = require('telescope.themes').get_dropdown(),
       },
-    })
+    }
 
-    telescope.load_extension("fzf")
-    telescope.load_extension("ui-select")
+    telescope.load_extension 'fzf'
+    telescope.load_extension 'ui-select'
 
     -- Custom buffer delete binding (not part of keys[])
-    vim.keymap.set("n", "<C-w>", function()
+    vim.keymap.set('n', '<C-w>', function()
       local bufnr = vim.api.nvim_get_current_buf()
       vim.api.nvim_buf_delete(bufnr, { force = true })
     end)

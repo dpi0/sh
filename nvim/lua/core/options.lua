@@ -7,23 +7,23 @@ local opt = vim.opt -- Shorter alias
 -- UI Settings
 opt.number = true -- Enable line numbers
 opt.relativenumber = true -- Use relative line numbers
-opt.signcolumn = "yes" -- Always show signcolumn
+opt.signcolumn = 'yes' -- Always show signcolumn
 opt.numberwidth = 4 -- Set number column width
 opt.cursorline = true -- Highlight current line
 opt.wrap = false -- Disable line wrapping
 opt.linebreak = true -- Prevent word splitting when wrapped
-opt.colorcolumn = "80" -- Highlight column at 80 chars
+opt.colorcolumn = '80' -- Highlight column at 80 chars
 opt.showmode = false -- Hide mode info (redundant with statusline)
 opt.cmdheight = 1 -- Space in command line for messages
-opt.syntax = "enable" -- Enable syntax highlighting
+opt.syntax = 'enable' -- Enable syntax highlighting
 opt.termguicolors = true -- Enable 24-bit colors
 opt.list = true -- Show whitespace characters
-opt.listchars = { tab = "| ", trail = "·", nbsp = "␣" } -- Customize whitespace display
+opt.listchars = { tab = '| ', trail = '·', nbsp = '␣' } -- Customize whitespace display
 
 -- Clipboard & Input
-opt.clipboard = "unnamedplus" -- Sync system clipboard
-opt.mouse = "a" -- Enable mouse support
-opt.whichwrap = "bs<>[]hl" -- Allow moving across lines with arrow keys
+opt.clipboard = 'unnamedplus' -- Sync system clipboard
+opt.mouse = 'a' -- Enable mouse support
+opt.whichwrap = 'bs<>[]hl' -- Allow moving across lines with arrow keys
 
 -- Indentation & Tabs
 opt.autoindent = true -- Copy indentation from current line
@@ -51,11 +51,11 @@ opt.writebackup = false -- Prevent editing files that are open elsewhere
 opt.undofile = true -- Enable persistent undo
 
 -- Command & File Handling
-opt.fileencoding = "utf-8" -- Set file encoding
+opt.fileencoding = 'utf-8' -- Set file encoding
 opt.conceallevel = 0 -- Show markdown code blocks
 opt.showtabline = 0 -- Show tab line
 opt.pumheight = 10 -- Popup menu height
-opt.runtimepath:remove("/usr/share/vim/vimfiles") -- Separate Vim & Neovim plugins
+opt.runtimepath:remove '/usr/share/vim/vimfiles' -- Separate Vim & Neovim plugins
 
 -- Search
 opt.ignorecase = true -- Case-insensitive search
@@ -65,26 +65,26 @@ opt.hlsearch = true -- Highlight search results
 
 -- Spell Checking
 opt.spell = true -- Enable spell checking
-opt.spelllang = "en_us" -- Set spell check language
+opt.spelllang = 'en_us' -- Set spell check language
 
 -- Code Folding
 -- https://reddit.dpi0.cloud/r/neovim/comments/1behv16/help_with_configuring_this_plugin_nvimufo/
-opt.foldmethod = "expr"
+opt.foldmethod = 'expr'
 -- :h vim.treesitter.foldexpr()
-opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 -- ref: https://github.com/neovim/neovim/pull/20750
-opt.foldtext = ""
-opt.fillchars:append("fold: ")
+opt.foldtext = ''
+opt.fillchars:append 'fold: '
 -- Open all folds by default, zm is not available
 opt.foldlevelstart = 99
 
 -- Miscellaneous
 vim.g.have_nerd_font = true -- Enable NERD font compatibility
-opt.backspace = "indent,eol,start" -- Allow backspacing over everything
-opt.shortmess:append("c") -- Suppress completion menu messages
-opt.iskeyword:append("-") -- Treat words with `-` as single words
-opt.formatoptions:remove({ "c", "r", "o" }) -- Disable auto-comment insertion
-vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions" -- Recommended session options - https://github.com/rmagatti/auto-session?tab=readme-ov-file#recommended-sessionoptions-config
+opt.backspace = 'indent,eol,start' -- Allow backspacing over everything
+opt.shortmess:append 'c' -- Suppress completion menu messages
+opt.iskeyword:append '-' -- Treat words with `-` as single words
+opt.formatoptions:remove { 'c', 'r', 'o' } -- Disable auto-comment insertion
+vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions' -- Recommended session options - https://github.com/rmagatti/auto-session?tab=readme-ov-file#recommended-sessionoptions-config
 
 -- ===========================
 -- NEOVIDE Configuration

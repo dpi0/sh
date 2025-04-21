@@ -1,44 +1,69 @@
 return {
-  "goolord/alpha-nvim",
-  event = "VimEnter",
+  'goolord/alpha-nvim',
+  event = 'VimEnter',
   dependencies = {
-    "nvim-tree/nvim-web-devicons",
+    'nvim-tree/nvim-web-devicons',
   },
   keys = {
     {
-      "<leader>a",
-      "<cmd>Alpha<CR>",
-      mode = "n",
-      desc = "Alpha Dashboard",
+      '<leader>a',
+      '<cmd>Alpha<CR>',
+      mode = 'n',
+      desc = 'Alpha Dashboard',
     },
   },
   config = function()
-    local alpha = require("alpha")
-    local dashboard = require("alpha.themes.dashboard")
+    local alpha = require 'alpha'
+    local dashboard = require 'alpha.themes.dashboard'
 
     -- Set header
     dashboard.section.header.val = {
-      "                                                     ",
-      "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
-      "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
-      "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
-      "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
-      "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
-      "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
-      "                                                     ",
+      -- "                                                     ",
+      -- "  ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ ",
+      -- "  ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ ",
+      -- "  ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ ",
+      -- "  ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ ",
+      -- "  ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ ",
+      -- "  ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ ",
+      -- "                                                     ",
+      '            .        +          .      .          .',
+      '     .            _        .                    .',
+      '+ ,              /;-._,-.____        ,-----.__',
+      '           .    (_:#::_.:::. `-._   /:, /-._, `._,',
+      '  `                 \\   _|`"=:_::.`.);  \\ __/ /',
+      "        +           ,    `./  \\:. `.   )==-'  .",
+      '    .      ., ,-=-.  ,\\, +#./`   \\:.  / /           .',
+      ".           \\/:/`-' , ,\\ '` ` `   ): , /_  -o",
+      "       .    /:+- - + +- : :- + + -:'  /(o-) \\)     .",
+      "  .      ,=':  \\    ` `/` ' , , ,:' `'--\".--\"---._/`7",
+      '   `.   (    \\: \\,-._` ` + \'\\, ,"   _,--._,---":.__/',
+      "              \\:  `  X` _| _,\\/'   .-'",
+      '.               ":._:`\\____  /:\'  /      .           .',
+      "                    \\::.  :\\/:'  /              +",
+      "   .                 `.:.  /:'  }      .",
+      '           .           ):_(:;   \\           .',
+      '                      /:. _/ ,  |',
+      '                   . (|::.     ,`                  .',
+      '     .                |::.    {\\',
+      '                      |::.\\  \\ `.',
+      '                      |:::(\\    |',
+      '              O       |:::/{ }  |                  (o',
+      '               )  ___/#\\::`/ (O "==._____   O, (O  /`',
+      '          ~~~w/w~"~~,\\` `:/,-(~`"~~~~~~~~"~o~\\~/~w|/~',
+      '   ~~~~~~~~~~~~~~~~~~~~~~~~~~~\\\\W~~~~~~~~~~~~\\|/~~',
     }
 
     -- Set menu
     dashboard.section.buttons.val = {
-      dashboard.button("r", "󱑍  > Recent files", ":lua require('fzf-lua').oldfiles()<CR>"),
-      dashboard.button("n", "  > New file", ":ene <BAR> startinsert <CR>"),
-      dashboard.button("f", "  > Find", ":lua require('fzf-lua').files({ cwd = os.getenv('HOME') })<CR>"),
-      dashboard.button("g", "󰗧  > Grep", ":lua require('fzf-lua').live_grep()<CR>"),
-      dashboard.button("t", "󰐅  > Files", ":OilToggle<CR>"),
-      dashboard.button("v", "󰦛  > Restore session", ":lua require('persistence').load({ last = true })<CR>"),
-      dashboard.button("s", "  > Settings", ":e $MYVIMRC | :cd %:p:h | split . | wincmd k | pwd<CR>"),
-      dashboard.button("l", "󰒲  > Lazy", ":Lazy<CR>"),
-      dashboard.button("q", "  > Quit", ":qa<CR>"),
+      dashboard.button('r', '󱑍  Recent files', ":lua require('fzf-lua').oldfiles()<CR>"),
+      dashboard.button('n', '  New file', ':ene <BAR> startinsert <CR>'),
+      dashboard.button('f', '  Find', ":lua require('fzf-lua').files()<CR>"),
+      -- dashboard.button("g", "󰗧  Grep", ":lua require('fzf-lua').live_grep()<CR>"),
+      dashboard.button('o', '󰐅  Files', ':OilToggle<CR>'),
+      dashboard.button('v', '󰦛  Restore session', ':SessionRestore<CR>'),
+      dashboard.button('s', '  Settings', ':e $MYVIMRC | :cd %:p:h | wincmd k | pwd<CR>'),
+      dashboard.button('l', '󰒲  Lazy', ':Lazy<CR>'),
+      dashboard.button('q', '  Quit', ':qa<CR>'),
     }
 
     -- Set footer
@@ -61,8 +86,8 @@ return {
     alpha.setup(dashboard.opts)
 
     -- Disable folding on alpha buffer
-    vim.cmd([[
+    vim.cmd [[
 				autocmd FileType alpha setlocal nofoldenable
-				]])
+				]]
   end,
 }

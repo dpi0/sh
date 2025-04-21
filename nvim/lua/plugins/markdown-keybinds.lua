@@ -1,6 +1,7 @@
 return {
-    'antonk52/markdowny.nvim',
-    config = function()
-        require('markdowny').setup()
-    end,
+  'antonk52/markdowny.nvim',
+  event = 'VeryLazy',
+  config = function()
+    require('markdowny').setup()
+  end,
 }
