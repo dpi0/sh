@@ -119,9 +119,9 @@
   # The packSizeLimit configuration in Git determines the maximum size of a packfile that Git will generate
   # packSizeLimit = 2g
 
-[url "git@github.com:"]
-  # it’ll replace https://github.com in remotes with git@github.com
-  insteadOf = "https://github.com/"
+; [url "git@github.com:"]
+;   # it’ll replace https://github.com in remotes with git@github.com
+;   insteadOf = "https://github.com/"
 
 # data integrity
 # [transfer]
