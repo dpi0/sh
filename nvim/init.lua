@@ -61,6 +61,7 @@ local plugins = {
   require 'plugins.screenshot', -- Screenshot Code Snippet.
   -- require 'plugins.todoo', -- Tddo from vimichael/my-nvim-config.
   require 'plugins.plenary', -- Plenary (useful dependency)
+  require 'plugins.spectre', -- Find and replace project wide
 }
 
 -- Conditionally add if hostname is "arch"
