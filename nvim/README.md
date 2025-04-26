@@ -1,6 +1,6 @@
 ## Neovim Configuration
 
-![nvim-config-screenshot](https://bin.dpi0.cloud/spzv8T.png)
+![nvim-config-screenshot](https://github.com/user-attachments/assets/076de815-88d6-499b-9341-8a0dec2a7c2b)
 
 ### Installation
 
