@@ -28,7 +28,7 @@ link() {
   echo "🔗 Symlinked: $SRC -> $DEST"
 }
 
-mkdir -p "$CONFIG_DIR/btop"
+mkdir -p "$CONFIG_DIR/btop" "$CONFIG_DIR/lazygit"
 
 link "$SHELL_DIR/.tmux.conf" "$HOME/.tmux.conf"
 link "$SHELL_DIR/.vimrc" "$HOME/.vimrc"
@@ -37,7 +37,7 @@ link "$SHELL_DIR/git/.gitattributes" "$HOME/.gitattributes"
 link "$SHELL_DIR/git/.gitconfig" "$HOME/.gitconfig"
 link "$SHELL_DIR/nvim" "$CONFIG_DIR/nvim"
 link "$SHELL_DIR/yazi" "$CONFIG_DIR/yazi"
-link "$SHELL_DIR/lazygit/config.yml" "$CONFIG_DIR/lazygit"
+link "$SHELL_DIR/lazygit/config.yml" "$CONFIG_DIR/lazygit/config.yml"
 link "$SHELL_DIR/zsh/.zshrc" "$HOME/.zshrc"
 
 echo "✅ Dotfiles installation complete."
