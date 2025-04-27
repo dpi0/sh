@@ -79,6 +79,11 @@ if hostname == 'arch' then
   -- table.insert(plugins, require 'plugins.obsidian') -- Obsidian.
 end
 
+-- Conditionally add if hostname is not "arch"
+if hostname ~= 'arch' then
+  table.insert(plugins, require 'plugins.blink') -- Blink completion.
+end
+
 -- Load all plugins at once
 require('lazy').setup(plugins)
 
