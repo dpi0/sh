@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # Global variables
 UPLOAD_URL="https://bin.dpi0.cloud"
 FILEPATH="$1"

@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+selected_file=$(
+  fd --type f --hidden --follow --color=always \
+    --exclude ".local" \
+    --exclude ".rustup" \
+    --exclude "node_modules" \
+    --exclude ".cargo" \
+    --exclude ".continue" \
+    --exclude ".cargo" \
+    --exclude ".mozilla" \
+    --exclude "go/pkg/mod" \
+    --exclude "Code/User" \
+    --exclude ".git" \
+    --exclude ".npm" \
+    --exclude ".cache" |
+    fzf \
+      --query="$search_term" \
+      --exact \
+      --extended \
+      --preview="bat --style=numbers --color=always --line-range :500 {}" \
+      --preview-window="right:50%" \
+      --ansi
+)
+if [[ -n $selected_file ]]; then
+  local parent_dir
+  parent_dir=$(dirname "$selected_file")
+  cd "$parent_dir" || echo "Failed to change directory"
+else
+  echo "No file selected"
+fi

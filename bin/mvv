@@ -1,5 +1,6 @@
-# https://www.baeldung.com/linux/moving-files-showing-progress
 # #!/usr/bin/env bash
+
+# https://www.baeldung.com/linux/moving-files-showing-progress
 #
 # # Safety check
 # [ "$#" -eq 0 ] && "No input files" && exit 1
