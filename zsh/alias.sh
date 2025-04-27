@@ -15,6 +15,7 @@ alias lf="yazi"
 # alias notes="note"
 alias send-to-phone="qrcp"
 alias Down='cd $HOME/Downloads/'
+alias temp='cd $HOME/temp/'
 alias App='cd $HOME/Applications/'
 alias Scr='cd $HOME/Screenshots/'
 alias dev='cd $HOME/dev/'
