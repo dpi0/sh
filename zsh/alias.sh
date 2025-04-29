@@ -434,10 +434,10 @@ alias ydisable="sudo systemctl disable"
 
 # TMUX
 
-alias t="tmux"
-alias ta="tmux a -t"
-alias tls="tmux ls"
-alias tn="tmux new-session -s"
-alias tk="tmux kill-session -t"
-alias tka="tmux kill-server"
-alias tks="tmux kill-server"
+alias t="tmux -u"
+alias ta="t a -t"
+alias tls="t ls"
+alias tn="t new-session -s"
+alias tk="t kill-session -t"
+alias tka="t kill-server"
+alias tks="t kill-server"
