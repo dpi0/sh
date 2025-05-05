@@ -1,7 +1,3 @@
-lfs() {
-  sudo yazi
-}
-
 copydir() {
   # Check if wl-copy is installed
   if command -v wl-copy &> /dev/null; then
@@ -114,4 +110,13 @@ in() {
 #         killall waybar
 #     done
 # }
-#
+
+dcr() {
+  if [ -z "$1" ]; then
+    echo "Usage: dcr <service_or_project_name>. Runs docker compose down; docker compose up -d"
+    return 1
+  fi
+  NAME="$1"
+  docker compose down "$NAME"
+  docker compose up -d "$NAME"
+}

@@ -47,6 +47,7 @@ vim.g.VM_maps = {
 }
 
 vim.g.VM_show_warnings = 0
+vim.g.VM_silent_exit = 1
 
 -- ===========================
 -- ESSENTIAL MAPPINGS
@@ -62,6 +63,7 @@ bind('n', '<leader>x', '<cmd>!chmod +x %<CR>', 'Make file executable (chmod +x)'
 bind('x', '<leader>p', [["_dP]], 'Paste without copying to register')
 bind('n', '<leader>ll', '<cmd>Lazy<CR>', 'Open Lazy Plugin Manager')
 bind('n', '<leader>rr', '<cmd>source %<CR>', 'Reload Neovim config')
+bind('n', '<A-n>', '<cmd>enew<CR>', 'Create new unnamed buffer')
 
 bind('n', '<leader>q', cmd 'qa', 'Quit all')
 bind('n', '<A-q>', cmd 'bd', 'Quit current buffer')

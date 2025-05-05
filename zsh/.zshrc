@@ -4,7 +4,7 @@ if command -v tmux &> /dev/null && [ -z "$TMUX" ]; then
 fi
 
 # Change prompt if the hostname is not arch
-if [[ "$(cat /etc/hostname)" != "arch" ]]; then
+if [[ "$(cat /etc/hostname)" != "titan" ]]; then
     PROMPT="%F{#009dff}%n%F{#00ff59}@%m %F{#ffea00}in %~ %F{reset}$ "
 else
     # let it stay on top & READ THIS: for why this is so cool- https://github.com/romkatv/zsh-bench?tab=readme-ov-file#instant-prompt

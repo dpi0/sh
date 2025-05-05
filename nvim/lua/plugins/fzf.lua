@@ -89,10 +89,10 @@ return {
             row = 0.5, -- center vertically
             col = 0.5, -- center horizontally
             anchor = 'center', -- anchor point is center
-            -- preview = {
-            --   layout = "vertical", -- stack preview vertically
-            --   vertical = "up:50%", -- preview pane at bottom
-            -- },
+            preview = {
+              layout = "horizontal",
+              horizontal = "right:50%",
+            },
           },
         }
       end,
@@ -131,14 +131,38 @@ return {
     {
       '<leader><leader>',
       function()
-        require('fzf-lua').buffers()
+        require('fzf-lua').buffers {
+          winopts = {
+            height = 0.9, -- window height
+            width = 0.9, -- window width
+            row = 0.5, -- center vertically
+            col = 0.5, -- center horizontally
+            anchor = 'center', -- anchor point is center
+            preview = {
+              layout = "horizontal",
+              horizontal = "right:50%",
+            },
+          },
+        }
       end,
       desc = 'Find existing buffers',
     },
     {
       '<leader>ro',
       function()
-        require('fzf-lua').oldfiles()
+        require('fzf-lua').oldfiles {
+          winopts = {
+            height = 0.9, -- window height
+            width = 0.9, -- window width
+            row = 0.5, -- center vertically
+            col = 0.5, -- center horizontally
+            anchor = 'center', -- anchor point is center
+            preview = {
+              layout = "horizontal",
+              horizontal = "right:50%",
+            },
+          },
+        }
       end,
       desc = 'Recent Files',
     },

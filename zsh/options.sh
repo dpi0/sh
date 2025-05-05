@@ -18,8 +18,8 @@ autoload -Uz _rmi
 autoload -Uz compinit && compinit
 autoload -Uz add-zsh-hook
 
-# export PATH="$PATH:$HOME/.local/bin"
-# export PATH="$PATH:$HOME/.cargo/bin"
+export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/scripts"
 export PATH="$PATH:$HOME/sh/bin"
 export PATH="$PATH:$HOME/bin"

@@ -75,3 +75,11 @@ bindkey '^j' down-line-or-history
 
 # bindkey '^h' backward-char           # H → Move cursor left
 # bindkey '^l' forward-char            # L → Move cursor right
+
+bindkey -M viins '^[^?' backward-kill-word
+
+zvm_vi_yank () {
+	zvm_yank
+	printf %s "${CUTBUFFER}" |  wl-copy -n
+	zvm_exit_visual_mode
+}

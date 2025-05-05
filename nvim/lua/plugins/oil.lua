@@ -26,6 +26,9 @@ return {
       keymaps = {
         ['<C-c>'] = false,
         ['q'] = 'actions.close',
+        -- ['<CR>'] = 'actions.select',
+        ['<S-l>'] = 'actions.select',
+        ['<S-h>'] = { 'actions.parent', mode = 'n' },
       },
     }
     vim.api.nvim_create_autocmd('User', {

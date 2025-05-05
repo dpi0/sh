@@ -39,7 +39,7 @@ local plugins = {
   require 'plugins.flash-jump', -- Jump quickly to text.
   -- require("plugins.fold"), -- Modern code folding.
   require 'plugins.snacks', -- QoL.
-  -- require 'plugins.session', -- Manage sessions.
+  require 'plugins.session', -- Manage sessions.
   -- require("plugins.zen"), -- Center.
   -- require("plugins.upload"), -- Nup - Upload files, yanks and selections to WantGuns/bin.
   -- require("plugins.file-manage-eunuch"), -- Perform various actions on the current file.
@@ -62,10 +62,11 @@ local plugins = {
   -- require 'plugins.todoo', -- Tddo from vimichael/my-nvim-config.
   require 'plugins.plenary', -- Plenary (useful dependency)
   require 'plugins.spectre', -- Find and replace project wide
+  require 'plugins.nee', -- New file
 }
 
--- Conditionally add if hostname is "arch"
-if hostname == 'arch' then
+-- Conditionally add for hostname
+if hostname == 'titan' then
   -- TELESCOPE requires build-essential (debian, ~300M) or base-devel (arch, ~260M)
   -- table.insert(plugins, require("plugins.telescope")) -- Fuzzy finder and picker.
   table.insert(plugins, require 'plugins.lsp') -- Language Server Protocol.
@@ -79,8 +80,8 @@ if hostname == 'arch' then
   -- table.insert(plugins, require 'plugins.obsidian') -- Obsidian.
 end
 
--- Conditionally add if hostname is not "arch"
-if hostname ~= 'arch' then
+-- Conditionally add if it is not the specified hostname.
+if hostname ~= 'titan' then
   table.insert(plugins, require 'plugins.blink') -- Blink completion.
 end
 

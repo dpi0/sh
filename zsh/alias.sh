@@ -12,6 +12,7 @@ alias image='loupe'
 alias yless="jless --yaml"
 # alias copy="wl-copy"
 alias lf="yazi"
+alias slf="sudo -E yazi"
 # alias notes="note"
 alias send-to-phone="qrcp"
 alias Down='cd $HOME/Downloads/'

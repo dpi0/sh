@@ -92,7 +92,8 @@ return {
   },
   keys = {
     {
-      '<A-u>',
+      -- '<A-u>',
+      '<leader>z',
       function()
         Snacks.lazygit { size = { width = 1, height = 1 } }
       end,
@@ -101,14 +102,14 @@ return {
       silent = true,
       noremap = true,
     },
-    {
-      '<A-u>',
-      '<C-\\><C-n>:lua Snacks.lazygit(toggle)<CR>',
-      mode = 't',
-      desc = 'Toggle Lazygit (terminal)',
-      silent = true,
-      noremap = true,
-    },
+    -- {
+    -- '<A-u>',
+    -- '<C-\\><C-n>:lua Snacks.lazygit(toggle)<CR>',
+    -- mode = 't',
+    -- desc = 'Toggle Lazygit (terminal)',
+    -- silent = true,
+    -- noremap = true,
+    -- },
     {
       '<leader>lg',
       function()
@@ -181,33 +182,33 @@ return {
       end,
       desc = 'Find Files',
     },
-    {
-      '<S-h>',
-      function()
-        Snacks.picker.buffers {
-          -- I always want my buffers picker to start in normal mode
-          on_show = function()
-            vim.cmd.stopinsert()
-          end,
-          finder = 'buffers',
-          format = 'buffer',
-          hidden = false,
-          unloaded = true,
-          current = true,
-          sort_lastused = true,
-          win = {
-            input = {
-              keys = {
-                ['d'] = 'bufdelete',
-              },
-            },
-            list = { keys = { ['d'] = 'bufdelete' } },
-          },
-          -- In case you want to override the layout for this keymap
-          -- layout = "ivy",
-        }
-      end,
-      desc = '[P]Snacks picker buffers',
-    },
+    -- {
+    --   '<S-h>',
+    --   function()
+    --     Snacks.picker.buffers {
+    --       -- I always want my buffers picker to start in normal mode
+    --       on_show = function()
+    --         vim.cmd.stopinsert()
+    --       end,
+    --       finder = 'buffers',
+    --       format = 'buffer',
+    --       hidden = false,
+    --       unloaded = true,
+    --       current = true,
+    --       sort_lastused = true,
+    --       win = {
+    --         input = {
+    --           keys = {
+    --             ['d'] = 'bufdelete',
+    --           },
+    --         },
+    --         list = { keys = { ['d'] = 'bufdelete' } },
+    --       },
+    --       -- In case you want to override the layout for this keymap
+    --       -- layout = "ivy",
+    --     }
+    --   end,
+    --   desc = '[P]Snacks picker buffers',
+    -- },
   },
 }
