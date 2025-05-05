@@ -120,3 +120,51 @@ dcr() {
   docker compose down "$NAME"
   docker compose up -d "$NAME"
 }
+
+af() {
+  CMD=$(
+    (
+      (alias)
+      (functions | grep "()" | cut -d ' ' -f1 | grep -v "^_")
+    ) | fzf | cut -d '=' -f1
+  )
+
+  eval $CMD
+}
+
+# https://github.com/beauwilliams/awesome-fzf
+
+cdf() {
+  local dir
+  dir=$(fd --type d --hidden --exclude '.*' . "${1:-.}" 2> /dev/null | fzf +m) &&
+    cd "$dir"
+  ls
+}
+
+envf() {
+  local out
+  out=$(env | awk -F= '{printf "\033[1;36m%s\033[0m=\033[1;32m%s\033[0m\n", $1, $2}' | fzf --ansi)
+  echo "$(echo "$out" | sed 's/.*=\x1b\[1;32m//' | sed 's/\x1b\[0m.*//')"
+}
+
+killf() {
+  local pid
+  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+
+  if [ "x$pid" != "x" ]; then
+    echo $pid | xargs kill -${1:-9}
+  fi
+}
+
+gst() {
+    git rev-parse --git-dir > /dev/null 2>&1 || { echo "You are not in a git repository" && return }
+    local selected
+    selected=$(git -c color.status=always status --short |
+        fzf --height 50% "$@" --border -m --ansi --nth 2..,.. \
+        --preview '(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -500' |
+        cut -c4- | sed 's/.* -> //')
+            if [[ $selected ]]; then
+                for prog in $(echo $selected);
+                do; $EDITOR $prog; done;
+            fi
+    }

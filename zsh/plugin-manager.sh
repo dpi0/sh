@@ -52,8 +52,9 @@ repos=(
   zdharma-continuum/fast-syntax-highlighting
   fdellwing/zsh-bat
   hlissner/zsh-autopair
-  larkery/zsh-histdb
+  # larkery/zsh-histdb
   # jeffreytse/zsh-vi-mode
+  # bigH/git-fuzzy
 )
 
 # ORDER MATTERS HERE!
@@ -68,8 +69,9 @@ plugins=(
   fast-syntax-highlighting
   zsh-bat
   zsh-autopair
-  zsh-histdb
+  # zsh-histdb
   # zsh-vi-mode
+  # git-fuzzy
 )
 
 plugin-clone $repos

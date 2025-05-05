@@ -22,10 +22,10 @@ selected_file=$(
       --preview-window="right:50%" \
       --ansi
 )
+
 if [[ -n $selected_file ]]; then
-  local parent_dir
-  parent_dir=$(dirname "$selected_file")
-  cd "$parent_dir" || echo "Failed to change directory"
+  PARENT_DIR=$(dirname "$selected_file")
+  cd "$PARENT_DIR" || echo "Failed to change directory"
 else
   echo "No file selected"
 fi

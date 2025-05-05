@@ -23,6 +23,7 @@ export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/scripts"
 export PATH="$PATH:$HOME/sh/bin"
 export PATH="$PATH:$HOME/bin"
+export PATH="$PATH:$HOME/sh/bin/git-fuzzy/bin"
 # export PATH="$PATH:$HOME/.deno/bin"
 # export PATH="$PATH:$HOME/.nix-profile/bin"
 
@@ -36,7 +37,6 @@ export PIPENV_VENV_IN_PROJECT=0
 if command -v vivid &>/dev/null; then
     export LS_COLORS="$(vivid generate molokai)"
 fi
-#export WALLPAPER="$HOME/Downloads/starligher-spaceship-sunset.jpeg"
 
 if command -v go &> /dev/null; then
   export PATH=$PATH:$(go env GOPATH)/bin
