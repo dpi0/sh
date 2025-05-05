@@ -35,7 +35,7 @@ link() {
 
 mkdir -p "$CONFIG_DIR/btop" "$CONFIG_DIR/lazygit"
 
-link "$SHELL_DIR/.tmux.conf" "$HOME/.tmux.conf"
+link "$SHELL_DIR/tmux/tmux.conf" "$HOME/.tmux.conf"
 link "$SHELL_DIR/.vimrc" "$HOME/.vimrc"
 link "$SHELL_DIR/btop.conf" "$CONFIG_DIR/btop/btop.conf"
 link "$SHELL_DIR/git/.gitattributes" "$HOME/.gitattributes"
