@@ -1,7 +1,6 @@
 [user]
   name = divyansh
   email = dpi0.dev@proton.me
-  signingkey = 2E13AF5C594A51F1 
 
 [init]
   defaultBranch = main
@@ -16,7 +15,7 @@
 [commit]
   # includes the full commit diff in the text editor when composing the commit message
   verbose = true
-  gpgSign = true
+  gpgSign = false
 
 [merge]
   # https://www.ductile.systems/zdiff3/
