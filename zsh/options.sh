@@ -23,53 +23,71 @@ export PATH="$PATH:$HOME/.cargo/bin"
 export PATH="$PATH:$HOME/scripts"
 export PATH="$PATH:$HOME/sh/bin"
 export PATH="$PATH:$HOME/bin"
-export PATH="$PATH:$HOME/sh/bin/git-fuzzy/bin"
-# export PATH="$PATH:$HOME/.deno/bin"
-# export PATH="$PATH:$HOME/.nix-profile/bin"
+export PATH="$PATH:$HOME/.deno/bin"
+export PATH="$PATH:$HOME/.nix-profile/bin"
 
 export CONFIG="$HOME/.config"
 export SCRIPTS="$HOME/scripts"
 export VOLUMES="$HOME/docker_volumes"
-export EDITOR="/usr/bin/nvim"
-export TERMINAL=/usr/bin/foot
+# export TERMINAL=/usr/bin/foot
+
 export GPG_TTY=$(tty)
-export PIPENV_VENV_IN_PROJECT=0
+
+if command -v python &>/dev/null; then
+  export PIPENV_VENV_IN_PROJECT=0
+fi
+
 if command -v vivid &>/dev/null; then
     export LS_COLORS="$(vivid generate molokai)"
 fi
 
+if command -v nvim &>/dev/null; then
+    export EDITOR="/usr/bin/nvim"
+elif command -v nvim >/dev/null 2>&1; then
+    export EDITOR="$(command -v nvim)"
+fi
+
 if command -v go &> /dev/null; then
   export PATH=$PATH:$(go env GOPATH)/bin
+  export GOPATH="$HOME/go"
 fi
 
 if command -v zoxide &> /dev/null; then
   eval "$(zoxide init zsh --cmd j)"
 fi
 
-export GOPATH="$HOME/go"
+if command -v gem &> /dev/null; then
+  export GEM_HOME="$(gem env user_gemhome)"
+  export PATH="$PATH:$GEM_HOME/bin"
+fi
 
-# load the environment variables from the .env file
-# export $(grep -v '^#' ~/.dotfiles/.env | xargs)
+# https://github.com/junegunn/fzf.vim/issues/358#issuecomment-841665170
+if command -v fzf &> /dev/null; then
+   # command -v bat &> /dev/null && \
+   # command -v fd &> /dev/null; then
+  export FZF_DEFAULT_OPTS="
+    --layout=reverse
+    --preview='bat --style=numbers --color=always --line-range :500 {}'
+    --preview-window='right:50%'
+    --ansi
+    --extended
+    --bind ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down,shift-up:preview-top,shift-down:preview-bottom
+  "
 
-# --- FZF ---
-# export FZF_DEFAULT_COMMAND="fd --type f"
-export FZF_DEFAULT_COMMAND="fd --type file --hidden --no-ignore --color=always --exclude .local/state --exclude .Trash-1000 --exclude node-modules --exclude .git --exclude .cargo --exclude .cache"
-# fd --type file --hidden --no-ignore --color=always --exclude .local/state --exclude .Trash-1000 --exclude node-modules --exclude .git --exclude .cargo
-export FZF_DEFAULT_OPTS='--height 50% --layout=reverse --bind "ctrl-y:execute-silent(printf {} | cut -f 2- | wl-copy --trim-newline)"'
-export FZF_CTRL_R_OPTS="
-  --preview 'echo {}' --preview-window up:3:hidden:wrap
-  --bind 'ctrl-/:toggle-preview'
-  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
-  --color header:italic
-  --header 'Press CTRL-Y to copy command into clipboard'"
-export FZF_CTRL_T_OPTS="
-  --walker-skip .git,node_modules,target
-  --preview 'bat -n --color=always {}'
-  --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-export FZF_ALT_C_OPTS="
-  --walker-skip .git,node_modules,target
-  --preview 'tree -C {}'"
-
-# --- RUBY GEMS ---
-# export GEM_HOME="$(gem env user_gemhome)"
-# export PATH="$PATH:$GEM_HOME/bin"
+  export FZF_DEFAULT_COMMAND="fd --hidden --color=always \
+    --exclude node-modules \
+    --exclude go/pkg/mod \
+    --exclude .local/share \
+    --exclude .local/state \
+    --exclude .vscode \
+    --exclude .config/Code \
+    --exclude .Trash-1000 \
+    --exclude .git \
+    --exclude .cargo \
+    --exclude .rustup \
+    --exclude .cache \
+    --exclude .cargo \
+    --exclude .mozilla \
+    --exclude .npm \
+    --exclude .cache"
+fi

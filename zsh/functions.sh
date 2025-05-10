@@ -1,31 +1,22 @@
-copydir() {
-  # Check if wl-copy is installed
-  if command -v wl-copy &> /dev/null; then
-    print -n $PWD | wl-copy
-  else
-    echo "wl-copy is not installed. Cannot copy current directory."
-  fi
+# Ask to create a directory if not present, else just cd into it
+sd() {
+    if [ ! -d "$1" ]; then
+        echo -n "Directory '$1' does not exist. Create it? (Y/n): "
+        read confirm
+        confirm=${confirm:-y}  # Default to 'y' if empty
+        if [[ $confirm == [Yy]* ]]; then
+            mkdir -p -- "$1"
+            echo "Directory created."
+        else
+            echo "Operation canceled."
+            return 1
+        fi
+    fi
+    builtin cd -- "$1"
 }
 
-copylastcommand() {
-  # Check if wl-copy is installed
-  if command -v wl-copy &> /dev/null; then
-    fc -ln -1 | tr -d '\n' | wl-copy
-  else
-    echo "wl-copy is not installed. Cannot copy last command."
-  fi
-}
-
-copybuffer() {
-  # You've already implemented the check here!
-  if command -v wl-copy &> /dev/null; then
-    echo "$BUFFER" | wl-copy
-  else
-    echo "Error! Couldn't copy current line. wl-copy not present"
-  fi
-}
-
-count_files() {
+# Count the total number of files in $PWD
+file_count() {
   local dir="${1:-$(pwd)}"
   local group=false
 
@@ -41,10 +32,7 @@ count_files() {
   fi
 }
 
-speedtest_curl() {
-  curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -
-}
-
+# Remove a sensitive variable from shell history
 remove_variable_from_history() {
   local var_to_remove="$1"
   local temp_file=$(mktemp)
@@ -73,44 +61,22 @@ remove_variable_from_history() {
   exec zsh
 }
 
-# fh() {
-#   selected_command=$(history -E 1 | sort -k1,1nr | fzf | awk '{$1=""; $2=""; $3=""; print $0}' | sed 's/^[ \t]*//')
-#
-#   # Check if wl-copy is installed
-#   if command -v wl-copy &> /dev/null; then
-#     echo "$selected_command" | wl-copy
-#   else
-#     echo "wl-copy is not installed. Cannot copy to clipboard."
-#   fi
-# }
-
-finh() {
+# Pacman log - Fuzzy Find
+plf() {
   cat /var/log/pacman.log | grep -E "\[ALPM\] (installed|removed|upgraded|upgraded|downgraded)" | awk '{print $1, $2, $3, $4, $5, $6}' | sort -r | fzf
 }
 
-# search all installed packages
-fin() {
+# All currently installed packages - Fuzzy Find
+inf() {
   pacman -Qq | fzf --preview='pacman -Qi {}'
 }
 
+# Pacman main repo - Fuzzy Find
 in() {
   pacman -Slq | fzf -q "$1" -m --preview 'pacman -Si {1}' | xargs -ro pacman -S
 }
 
-# launch-waybar(){
-#     CONFIG_FILES="$DOTFILES/waybar/config.jsonc $DOTFILES/waybar/style.css "
-#
-#     #$DOTFILES/waybar/config2.jsonc
-#
-#     trap "killall waybar" EXIT
-#
-#     while true; do
-#         waybar &
-#         inotifywait -e create,modify $CONFIG_FILES
-#         killall waybar
-#     done
-# }
-
+# Restart compose project
 dcr() {
   if [ -z "$1" ]; then
     echo "Usage: dcr <service_or_project_name>. Runs docker compose down; docker compose up -d"
@@ -121,6 +87,7 @@ dcr() {
   docker compose up -d "$NAME"
 }
 
+# Alias - Fuzzy Find
 af() {
   CMD=$(
     (
@@ -134,19 +101,22 @@ af() {
 
 # https://github.com/beauwilliams/awesome-fzf
 
-cdf() {
-  local dir
-  dir=$(fd --type d --hidden --exclude '.*' . "${1:-.}" 2> /dev/null | fzf +m) &&
-    cd "$dir"
-  ls
-}
+# cd - Fuzzy Find
+# cdf() {
+#   local dir
+#   dir=$(fd --type d --hidden --exclude '.*' . "${1:-.}" 2> /dev/null | fzf +m) &&
+#     cd "$dir"
+#   ls
+# }
 
+# Environment Variables
 envf() {
   local out
   out=$(env | awk -F= '{printf "\033[1;36m%s\033[0m=\033[1;32m%s\033[0m\n", $1, $2}' | fzf --ansi)
   echo "$(echo "$out" | sed 's/.*=\x1b\[1;32m//' | sed 's/\x1b\[0m.*//')"
 }
 
+# Kill Processes
 killf() {
   local pid
   pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
@@ -156,6 +126,7 @@ killf() {
   fi
 }
 
+# Git Status - Fuzzy Find
 gst() {
     git rev-parse --git-dir > /dev/null 2>&1 || { echo "You are not in a git repository" && return }
     local selected
@@ -167,4 +138,213 @@ gst() {
                 for prog in $(echo $selected);
                 do; $EDITOR $prog; done;
             fi
-    }
+}
+
+# https://github.com/happycod3r/fzf-tools#documentation
+
+# Fuzzy search the man pages
+manf() {
+	local  selected_command
+	selected_command=$(
+		man  -k . \
+		|  awk '{print $1}' \
+		|  sort  \
+		|  uniq  \
+		|  fzf  --multi  --cycle  \
+			--preview='echo {}'
+	)
+	if [[ -n  "$selected_command" ]]; then
+		man  "$selected_command"  \
+			|  fzf  --multi  --cycle  --tac  --no-sort  \
+				--preview='echo {}'  \
+				--layout='reverse-list'
+	fi
+}
+
+# Allows searching for and executing a command from your command history interactively using fzf.
+hf() {
+	local  selected_command
+	selected_command=$(
+		history -E 1 \
+		|  awk '{$1=""; print $0}' \
+		|  awk '!x[$0]++' \
+		|  fzf  --cycle  --tac +s --no-sort  \
+			--preview 'echo {}' \
+	)
+	if [[ -n  "$selected_command" ]]; then
+		eval  "$selected_command"
+	fi
+}
+
+# History fuzzy find and Ctrl+Y to copy as well
+# only problem is hitting enter doesn't produce stdout of the command
+# so going with CTRL+R for fzf-tab for now, otherwise this is nice
+# fzf-history-widget() {
+#   local selected
+#   selected=$(builtin history -E 1 | fzf \
+#     --layout=reverse \
+#     --preview='echo {}' \
+#     --preview-window=up:3:hidden:wrap \
+#     --bind='ctrl-/:toggle-preview' \
+#     --bind='ctrl-y:execute-silent(echo -n {4..} | wl-copy)+abort' \
+#     --color=header:italic \
+#     --header='Press CTRL-Y to copy command into clipboard' \
+#     --bind='ctrl-u:preview-page-up,ctrl-d:preview-page-down,shift-up:preview-top,shift-down:preview-bottom')
+#
+#   if [[ -n $selected ]]; then
+#     BUFFER="${selected#* }"
+#     CURSOR=$#BUFFER
+#     zle reset-prompt
+#   fi
+# }
+
+# Fuzzy find on all files recursively, and jump to the directory of the selected file
+jump_to_dir_of_file() {
+  local file
+  file=$(fzf \
+    --walker-skip .git,node_modules,target,.cache \
+    --preview 'bat -n --color=always {}'
+  ) || return
+  echo "$file"
+  cd "$(dirname "$file")" || return
+}
+
+# Same as above, BUT show a tree for the respective file's parent directory
+jump_to_dir_of_file_tree() {
+  local file
+  file=$(fzf \
+    --walker-skip .git,node_modules,target,.cache \
+    --preview 'tree -C -L 2 $(dirname {}) | head -100; echo ""; echo "Selected: {}"; echo ""; ls -la $(dirname {})/{} 2>/dev/null || echo "Directory"'
+  ) || return
+  echo "$file"
+  cd "$(dirname "$file")" || return
+}
+
+# Fuzzy find directories only and change to selected directory
+# Shows tree view of the hovered directory in preview window
+# As i am explicitly passing fd --type d into fzf (have to!), this overrides FZF_DEFAULT_OPTS and FZF_DEFAULT_COMMAND
+# so i have to fd commands manually here (not in other functions)
+fzf_cd() {
+  local dir
+  dir=$(fd --type d . --color=always \
+    --exclude node-modules \
+    --exclude go/pkg/mod \
+    --exclude .local/share \
+    --exclude .local/state \
+    --exclude .vscode \
+    --exclude .config/Code \
+    --exclude .Trash-1000 \
+    --exclude .git \
+    --exclude .cargo \
+    --exclude .rustup \
+    --exclude .cache \
+    --exclude .cargo \
+    --exclude .mozilla \
+    --exclude .npm \
+    --exclude .cache | \
+    fzf --exact --preview 'echo "📁 Directory: {}"; echo ""; \
+                   echo "📊 Stats:"; echo "   $(fd --type f . {} | wc -l) files, $(du -sh {} | cut -f1) size"; echo ""; \
+                   echo "🌳 Tree:"; tree -C -L 3 {} | head -100'
+  ) || return
+  cd "$dir" || return
+}
+
+# Open selected file using your favorite opener
+jump_to_file() {
+  local search_term="$1"
+  local selected_file
+  selected_file=$(fzf --query="$search_term")
+
+  if [ -n "$selected_file" ]; then
+    local file_extension="${selected_file##*.}"
+
+    case "$file_extension" in
+      pdf)
+        evince "$selected_file"
+        ;;
+      jpg | jpeg | png | gif | bmp | webp)
+        (command -v loupe &> /dev/null && loupe "$selected_file") || \
+        (command -v org.kde.gwenview &> /dev/null && org.kde.gwenview "$selected_file")
+        ;;
+      mp4 | mkv | avi | webm)
+        mpv "$selected_file"
+        ;;
+      txt | py | rs | go | md)
+        (command -v nvim &> /dev/null && nvim "$selected_file") || vim "$selected_file"
+        ;;
+      *)
+        (command -v nvim &> /dev/null && nvim "$selected_file") || vim "$selected_file"
+        ;;
+    esac
+
+    command -v wl-copy &> /dev/null && echo "$selected_file" | wl-copy
+    echo "$selected_file"
+  fi
+}
+
+# Grep Fuzzy Search with a forked rga-fzf to open files in nvim only
+rga-my-fzf() {
+	RG_PREFIX="rga --files-with-matches"
+  local selected_file
+	selected_file="$(
+		FZF_DEFAULT_COMMAND="$RG_PREFIX '$1'" \
+			fzf --sort --preview="[[ ! -z {} ]] && rga --pretty --context 5 {q} {}" \
+				--phony -q "$1" \
+				--bind "change:reload:$RG_PREFIX {q}" \
+				--preview-window="70%:wrap"
+	)"
+
+  if [ -n "$selected_file" ]; then
+    if command -v nvim &> /dev/null; then
+      nvim "$selected_file"
+    else
+      echo "nvim not found" >&2
+      exit 1
+    fi
+
+    command -v wl-copy &> /dev/null && echo "$selected_file" | wl-copy
+    echo "$selected_file"
+  fi
+}
+
+# Zoxide with a tree preview pane using fzf!
+z_fzf() {
+  local dir
+  dir=$(zoxide query -ls | awk '{$1=""; sub(/^ /, ""); print}' | \
+    fzf --exact \
+        --preview '
+          dir=$(echo {} | xargs realpath 2>/dev/null)
+          [[ -z "$dir" || ! -d "$dir" ]] && exit
+
+          echo "📁 Directory: $dir"
+          echo ""
+
+          echo "📊 Stats:"
+          file_count=$(fd --type f . "$dir" 2>/dev/null | wc -l)
+          dir_size=$(du -sh "$dir" 2>/dev/null | cut -f1)
+          printf "   %s files, %s total size\n" "$file_count" "$dir_size"
+          echo ""
+
+          echo "📂 Largest files:"
+          fd --type f . "$dir" -x du -b {} 2>/dev/null | sort -nr | head -5 | awk '\''{printf "   %.1f MiB  %s\n", $1/1048576, $2}'\'' 
+          echo ""
+
+          echo "🕒 Recent files:"
+          fd --type f --changed-within 7d . "$dir" -x basename 2>/dev/null | head -5 | sed "s/^/   /"
+          echo ""
+
+          echo "🔧 Git status:"
+          if git -C "$dir" rev-parse --is-inside-work-tree &>/dev/null; then
+            git -C "$dir" status --short -b | head -5 | sed "s/^/   /"
+          else
+            echo "   Not a git repository."
+          fi
+          echo ""
+
+          echo "🌳 Tree (depth 2):"
+          tree -C -L 2 "$dir" 2>/dev/null | head -100
+        ' \
+  ) || return
+
+  cd "$dir" || return
+}

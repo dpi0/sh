@@ -6,8 +6,31 @@
 # -----------------------------------------
 
 bindkey -e # sets the ZLE to use Emacs key bindings
-# bindkey -v                          # Enable vi keybindings
+# bindkey -v # Enable vi keybindings
 
+copydir() {
+  if command -v wl-copy &> /dev/null; then
+    print -n $PWD | wl-copy
+  else
+    echo "wl-copy is not installed. Cannot copy current directory."
+  fi
+}
+
+copylastcommand() {
+  if command -v wl-copy &> /dev/null; then
+    fc -ln -1 | tr -d '\n' | wl-copy
+  else
+    echo "wl-copy is not installed. Cannot copy last command."
+  fi
+}
+
+copybuffer() {
+  if command -v wl-copy &> /dev/null; then
+    echo "$BUFFER" | wl-copy
+  else
+    echo "Error! Couldn't copy current line. wl-copy not present"
+  fi
+}
 
 go_forward_in_words() {
     local WORDCHARS=${WORDCHARS//[-\/,.:;_=]}
@@ -34,13 +57,13 @@ zle -N delete_word
 bindkey '^[^?' delete_word
 
 zle -N copybuffer
-bindkey "^O" copybuffer
+bindkey "^[o" copybuffer
 
 zle -N copydir
 bindkey "^Y" copydir
 
 zle -N copylastcommand
-bindkey "^T" copylastcommand
+bindkey "^[O" copylastcommand
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
@@ -54,10 +77,18 @@ bindkey '^[[B' history-substring-search-down
 # zle -N sudo-command-line
 # bindkey "\e\e" sudo-command-line
 
-bindkey -s '^[v' 'v^M'
-bindkey -s '^[c' 'code .^M'
-bindkey -s '^[m' 'lf .^M'
-bindkey -s '^[n' 'lz^M'
+# '^[KEY' means Alt+KEY
+bindkey -s '^[v' 'v .^M'
+bindkey -s '^[b' 'lf .^M'
+bindkey -s '^[B' 'lf $HOME/Screenshots^M'
+bindkey -s '^[f' 'jump_to_file^M'
+bindkey -s '^[F' 'rga-my-fzf^M'
+bindkey -s '^[g' 'rga-my-fzf^M'
+bindkey -s '^[d' 'fzf_cd^M'
+bindkey -s '^[c' 'jump_to_dir_of_file_tree^M'
+bindkey -s '^[D' 'jump_to_dir_of_file^M'
+bindkey -s '^[w' '^D'
+bindkey -s '^[j' 'z_fzf^M'
 
 # Bind Shift+HJKL to cursor movements
 #bindkey -s '^[H' '^[OA'  # Shift+H -> Up
