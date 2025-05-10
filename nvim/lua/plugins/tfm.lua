@@ -110,20 +110,27 @@ return {
 }
 
 -- return {
---   "mikavilpas/yazi.nvim",
---   event = "VeryLazy",
+--   'mikavilpas/yazi.nvim',
+--   -- dependencies = {
+--   --   'folke/snacks.nvim',
+--   -- },
+--   event = 'VeryLazy',
 --   keys = {
 --     {
---       "<A-m>",
---       "<cmd>Yazi toggle<CR>",
---       mode = "n",
---       desc = "Toggle Yazi file manager (normal)",
+--       '<leader>e',
+--       mode = { 'n', 'v' },
+--       '<cmd>Yazi<cr>',
+--       desc = 'Open yazi at the current file',
 --     },
 --     {
---       "<A-m>",
---       "<C-\\><C-n><cmd>Yazi toggle<CR>",
---       mode = "t",
---       desc = "Toggle Yazi file manager (terminal)",
+--       '<leader>E',
+--       '<cmd>Yazi toggle<cr>',
+--       desc = 'Resume the last yazi session',
+--     },
+--     opts = {
+--       keymaps = {
+--         show_help = '<f1>',
+--       },
 --     },
 --   },
 -- }

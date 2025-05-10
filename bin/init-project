@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-LICENSE_URL="https://bin.dpi0.cloud/license"
+LICENSE_URL="https://bin.dpi0.cloud/agplv3"
 
 # Initialize git repository if not already initialized
 if [ ! -d .git ]; then
@@ -23,10 +23,12 @@ fi
 
 # Create README.md if it doesn't exist
 if [ ! -f README.md ]; then
-  echo -e "# Project Title\n\nA brief description of the project." > README.md
+  echo -e "# ${PWD}" > README.md
   echo "🟢 Created README.md"
 else
   echo "🟨 README.md already exists"
 fi
 
 echo "🎉 Project setup complete"
+
+ls -lah

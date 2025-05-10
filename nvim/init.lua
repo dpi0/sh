@@ -30,7 +30,7 @@ local plugins = {
   require 'plugins.multicursors', -- Enables multiple cursors for editing.
   -- require("plugins.neoterm"), -- Manages terminal buffers.
   require 'plugins.oil', -- File explorer integration.
-  -- require("plugins.todo-comments"), -- Highlights codes, comments etc
+  require 'plugins.todo-comments', -- Highlights codes, comments etc
   require 'plugins.which-key', -- Displays available keybindings.
   -- require 'plugins.todo', -- Todo with Todone.
   require 'plugins.tfm', -- Use any terminal File Manager (currently using Yazi).
@@ -43,15 +43,15 @@ local plugins = {
   -- require("plugins.zen"), -- Center.
   -- require("plugins.upload"), -- Nup - Upload files, yanks and selections to WantGuns/bin.
   -- require("plugins.file-manage-eunuch"), -- Perform various actions on the current file.
-  require 'plugins.sudo', -- Write/Edit to unprivileged files with sudo.
+  -- require 'plugins.sudo', -- Write/Edit to unprivileged files with sudo.
   require 'plugins.fzf', -- Fzf lua.
   -- require("plugins.git-vim-fugitive"), -- Vim-fugitive.
-  require 'plugins.markdown-keybinds', -- Markdown keybindings.
+  -- require 'plugins.markdown-keybinds', -- Markdown keybindings.
   require 'plugins.fim', -- Floating Terminal.
   require 'plugins.harpoon', -- Quickly switch b/w multiple files.
   -- require 'plugins.marks', -- Better Marks.
-  -- require("plugins.clipboard"), -- Neogit clipboard.
-  -- require 'plugins.undo', -- Undo tree.
+  require("plugins.clipboard"), -- Neogit clipboard.
+  require 'plugins.undo', -- Undo tree.
   -- require("plugins.screensaver"), -- Drop Screensaver to show when idle.
   -- require("plugins.tiny-diagnose"), -- Tiny inline diagnostic messages.
   -- require 'plugins.mini-ai', -- Mini A/I objects.
@@ -63,6 +63,8 @@ local plugins = {
   require 'plugins.plenary', -- Plenary (useful dependency)
   require 'plugins.spectre', -- Find and replace project wide
   require 'plugins.nee', -- New file
+  require 'plugins.zoxide', -- Zoxide.vim
+  require 'plugins.autosave', -- Autosave current buffer
 }
 
 -- Conditionally add for hostname
@@ -82,7 +84,8 @@ end
 
 -- Conditionally add if it is not the specified hostname.
 if hostname ~= 'titan' then
-  table.insert(plugins, require 'plugins.blink') -- Blink completion.
+  -- table.insert(plugins, require 'plugins.blink')          -- Blink completion.
+  table.insert(plugins, require 'plugins.autocompletion') -- Autocompletion support.
 end
 
 -- Load all plugins at once

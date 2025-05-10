@@ -81,3 +81,26 @@ vim.keymap.set('n', '<Leader>cub', function()
     end
   end
 end, { silent = true, desc = 'Close unused buffers' })
+
+-- Auto-save current buffer on focus lost
+-- Applies to all files/buffers.
+-- vim.bo.modified - Checks if the buffer is modified.
+-- vim.bo.buftype == "": Ensures it's a normal file (not quickfix, terminal, etc).
+-- vim.fn.getbufvar(0, "&readonly") == 0: Prevents saving read-only files.
+-- vim.api.nvim_create_autocmd('FocusLost', {
+--   pattern = '*',
+--   callback = function()
+--     if vim.bo.modified and vim.bo.buftype == '' and vim.fn.getbufvar(0, '&readonly') == 0 then
+--       vim.cmd 'silent! write'
+--     end
+--   end,
+--   desc = 'Auto-save on losing focus',
+--   desc = 'Auto-save on losing focus',
+-- })
+
+-- vim.api.nvim_create_autocmd('TextYankPost', {
+--   callback = function()
+--     local yanked_text = vim.fn.getreg '"'
+--     require('yup').add_to_history(yanked_text)
+--   end,
+-- })

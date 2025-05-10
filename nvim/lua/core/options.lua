@@ -22,49 +22,49 @@ opt.listchars = { tab = '| ', trail = '·', nbsp = '␣' } -- Customize whitespa
 
 -- Clipboard & Input
 opt.clipboard = 'unnamedplus' -- Sync system clipboard
-opt.mouse = 'a' -- Enable mouse support
-opt.whichwrap = 'bs<>[]hl' -- Allow moving across lines with arrow keys
+opt.mouse = 'a'               -- Enable mouse support
+opt.whichwrap = 'bs<>[]hl'    -- Allow moving across lines with arrow keys
 
 -- Indentation & Tabs
-opt.autoindent = true -- Copy indentation from current line
+opt.autoindent = true  -- Copy indentation from current line
 opt.smartindent = true -- Smarter indentation
-opt.expandtab = true -- Convert tabs to spaces
-opt.shiftwidth = 4 -- Spaces per indentation level
-opt.tabstop = 4 -- Tab width
-opt.softtabstop = 4 -- Spaces a tab represents in editing
+opt.expandtab = true   -- Convert tabs to spaces
+opt.shiftwidth = 2     -- Spaces per indentation level
+opt.tabstop = 2        -- Tab width
+opt.softtabstop = 2    -- Spaces a tab represents in editing
 
 -- Splits & Window Behavior
 opt.splitbelow = true -- Horizontal splits appear below
 opt.splitright = true -- Vertical splits appear to the right
-opt.scrolloff = 4 -- Keep 4 lines visible when scrolling
+opt.scrolloff = 4     -- Keep 4 lines visible when scrolling
 opt.sidescrolloff = 8 -- Keep 8 columns visible when scrolling
 
 -- Performance & Behavior
 opt.lazyredraw = false -- Don't redraw during macros/scripts
-opt.updatetime = 50 -- Faster update time (default: 4000ms)
-opt.timeoutlen = 300 -- Faster key sequence timeout (default: 1000ms)
+opt.updatetime = 50    -- Faster update time (default: 4000ms)
+opt.timeoutlen = 300   -- Faster key sequence timeout (default: 1000ms)
 
 -- Backup & Undo
-opt.swapfile = false -- Disable swapfile
-opt.backup = false -- Disable backup files
+opt.swapfile = false    -- Disable swapfile
+opt.backup = false      -- Disable backup files
 opt.writebackup = false -- Prevent editing files that are open elsewhere
-opt.undofile = true -- Enable persistent undo
+opt.undofile = true     -- Enable persistent undo
 
 -- Command & File Handling
-opt.fileencoding = 'utf-8' -- Set file encoding
-opt.conceallevel = 0 -- Show markdown code blocks
-opt.showtabline = 0 -- Show tab line
-opt.pumheight = 10 -- Popup menu height
+opt.fileencoding = 'utf-8'                       -- Set file encoding
+opt.conceallevel = 0                             -- Show markdown code blocks
+opt.showtabline = 0                              -- Show tab line
+opt.pumheight = 10                               -- Popup menu height
 opt.runtimepath:remove '/usr/share/vim/vimfiles' -- Separate Vim & Neovim plugins
 
 -- Search
 opt.ignorecase = true -- Case-insensitive search
-opt.smartcase = true -- Case-sensitive if mixed-case search
-opt.incsearch = true -- Show incremental matches
-opt.hlsearch = true -- Highlight search results
+opt.smartcase = true  -- Case-sensitive if mixed-case search
+opt.incsearch = true  -- Show incremental matches
+opt.hlsearch = true   -- Highlight search results
 
 -- Spell Checking
-opt.spell = true -- Enable spell checking
+opt.spell = true        -- Enable spell checking
 opt.spelllang = 'en_us' -- Set spell check language
 
 -- Code Folding
@@ -79,12 +79,13 @@ opt.fillchars:append 'fold: '
 opt.foldlevelstart = 99
 
 -- Miscellaneous
-vim.g.have_nerd_font = true -- Enable NERD font compatibility
-opt.backspace = 'indent,eol,start' -- Allow backspacing over everything
-opt.shortmess:append 'c' -- Suppress completion menu messages
-opt.iskeyword:append '-' -- Treat words with `-` as single words
-opt.formatoptions:remove { 'c', 'r', 'o' } -- Disable auto-comment insertion
-vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions' -- Recommended session options - https://github.com/rmagatti/auto-session?tab=readme-ov-file#recommended-sessionoptions-config
+vim.g.have_nerd_font = true                                                                            -- Enable NERD font compatibility
+opt.backspace = 'indent,eol,start'                                                                     -- Allow backspacing over everything
+opt.shortmess:append 'c'                                                                               -- Suppress completion menu messages
+opt.iskeyword:append '-'                                                                               -- Treat words with `-` as single words
+opt.formatoptions:remove { 'c', 'r', 'o' }                                                             -- Disable auto-comment insertion
+vim.o.sessionoptions =
+'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'                        -- Recommended session options - https://github.com/rmagatti/auto-session?tab=readme-ov-file#recommended-sessionoptions-config
 
 -- ===========================
 -- NEOVIDE Configuration

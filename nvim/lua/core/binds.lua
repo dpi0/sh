@@ -63,7 +63,7 @@ bind('n', '<leader>x', '<cmd>!chmod +x %<CR>', 'Make file executable (chmod +x)'
 bind('x', '<leader>p', [["_dP]], 'Paste without copying to register')
 bind('n', '<leader>ll', '<cmd>Lazy<CR>', 'Open Lazy Plugin Manager')
 bind('n', '<leader>rr', '<cmd>source %<CR>', 'Reload Neovim config')
-bind('n', '<A-n>', '<cmd>enew<CR>', 'Create new unnamed buffer')
+-- bind('n', '<A-n>', '<cmd>enew<CR>', 'Create new unnamed buffer')
 
 bind('n', '<leader>q', cmd 'qa', 'Quit all')
 bind('n', '<A-q>', cmd 'bd', 'Quit current buffer')
@@ -119,12 +119,12 @@ bind('n', '<C-k>', '<C-w>k', 'Move up')
 -- ===========================
 -- TAB MANAGEMENT
 -- ===========================
-bind('n', '<leader>tn', ':tabnew<CR>') -- Open new tab
-bind('n', '<leader>tw', ':tabclose<CR>') -- Close current tab
-bind('n', '<leader>tl', ':tabnext<CR>') -- Go to next tab
+bind('n', '<leader>tn', ':tabnew<CR>')      -- Open new tab
+bind('n', '<leader>tw', ':tabclose<CR>')    -- Close current tab
+bind('n', '<leader>tl', ':tabnext<CR>')     -- Go to next tab
 bind('n', '<leader>th', ':tabprevious<CR>') -- Go to previous tab
 
-bind('n', '<A-o>', ':OilToggle<CR>') -- Go to previous tab
+bind('n', '<A-o>', ':OilToggle<CR>')        -- Go to previous tab
 
 -- Toggle line wrapping
 bind('n', '<leader>lw', cmd 'set wrap!', 'Toggle line wrapping')
@@ -165,3 +165,14 @@ if vim.fn.executable 'taplo' == 1 then
 end
 
 -- vim.api.nvim_set_keymap("n", "A-C-f", "ggVGgq", { noremap = true, silent = true })
+
+-- Function to run zoxide query with fzf-lua
+local function zoxide_fzf()
+  require('fzf-lua').files {
+    cmd = 'zoxide query --interactive',
+    prompt = 'Zoxide: ', -- You can change the prompt text
+  }
+end
+
+-- Keybinding to trigger zoxide with fzf-lua
+vim.api.nvim_set_keymap('n', '<Leader>va', ':lua zoxide_fzf()<CR>', { noremap = true, silent = true })

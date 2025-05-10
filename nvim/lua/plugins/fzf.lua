@@ -14,12 +14,12 @@ return {
     -- },
     fzf_opts = { ['--cycle'] = true },
     grep = {
-      rg_glob = true, -- enable glob parsing
-      glob_flag = '--iglob', -- case insensitive globs
+      rg_glob = true,            -- enable glob parsing
+      glob_flag = '--iglob',     -- case insensitive globs
       glob_separator = '%s%-%-', -- query separator pattern (lua): ' --'
       cmd = 'rg --line-number --column --no-heading --color=always',
       rg_opts = table.concat({
-        '--hidden', -- if you want to include hidden files (optional)
+        '--hidden',        -- if you want to include hidden files (optional)
         '--no-ignore-vcs', -- optional, to ignore .gitignore
         '--glob=!**/.local/**',
         '--glob=!**/.rustup/**',
@@ -84,14 +84,14 @@ return {
       function()
         require('fzf-lua').files {
           winopts = {
-            height = 0.9, -- window height
-            width = 0.9, -- window width
-            row = 0.5, -- center vertically
-            col = 0.5, -- center horizontally
+            height = 0.9,      -- window height
+            width = 0.9,       -- window width
+            row = 0.5,         -- center vertically
+            col = 0.5,         -- center horizontally
             anchor = 'center', -- anchor point is center
             preview = {
-              layout = "horizontal",
-              horizontal = "right:50%",
+              layout = 'horizontal',
+              horizontal = 'right:50%',
             },
           },
         }
@@ -103,17 +103,17 @@ return {
       function()
         require('fzf-lua').live_grep {
           winopts = {
-            height = 0.9, -- window height
-            width = 0.8, -- window width
-            row = 0.5, -- center vertically
-            col = 0.5, -- center horizontally
-            anchor = 'center', -- anchor point is center
+            height = 0.9,          -- window height
+            width = 0.8,           -- window width
+            row = 0.5,             -- center vertically
+            col = 0.5,             -- center horizontally
+            anchor = 'center',     -- anchor point is center
             preview = {
               layout = 'vertical', -- stack preview vertically
               vertical = 'up:50%', -- preview pane at bottom
             },
           },
-          glob_flag = '--iglob', -- case sensitive globs
+          glob_flag = '--iglob',      -- case sensitive globs
           fzf_opts = {
             ['--layout'] = 'reverse', -- results on top, prompt at bottom
           },
@@ -133,14 +133,14 @@ return {
       function()
         require('fzf-lua').buffers {
           winopts = {
-            height = 0.9, -- window height
-            width = 0.9, -- window width
-            row = 0.5, -- center vertically
-            col = 0.5, -- center horizontally
+            height = 0.9,      -- window height
+            width = 0.9,       -- window width
+            row = 0.5,         -- center vertically
+            col = 0.5,         -- center horizontally
             anchor = 'center', -- anchor point is center
             preview = {
-              layout = "horizontal",
-              horizontal = "right:50%",
+              layout = 'horizontal',
+              horizontal = 'right:50%',
             },
           },
         }
@@ -152,14 +152,14 @@ return {
       function()
         require('fzf-lua').oldfiles {
           winopts = {
-            height = 0.9, -- window height
-            width = 0.9, -- window width
-            row = 0.5, -- center vertically
-            col = 0.5, -- center horizontally
+            height = 0.9,      -- window height
+            width = 0.9,       -- window width
+            row = 0.5,         -- center vertically
+            col = 0.5,         -- center horizontally
             anchor = 'center', -- anchor point is center
             preview = {
-              layout = "horizontal",
-              horizontal = "right:50%",
+              layout = 'horizontal',
+              horizontal = 'right:50%',
             },
           },
         }
@@ -183,8 +183,23 @@ return {
     {
       '<leader>fh',
       function()
-        require('fzf-lua').files { cwd = os.getenv 'HOME', hidden = true }
+        require('fzf-lua').files {
+          cwd = os.getenv 'HOME',
+          hidden = true,
+          winopts = {
+            height = 0.9,      -- window height
+            width = 0.9,       -- window width
+            row = 0.5,         -- center vertically
+            col = 0.5,         -- center horizontally
+            anchor = 'center', -- anchor point is center
+            preview = {
+              layout = 'horizontal',
+              horizontal = 'right:50%',
+            },
+          },
+        }
       end,
+
       desc = 'Find files in $HOME',
     },
     {
@@ -211,8 +226,22 @@ return {
     {
       '<leader>fn',
       function()
-        require('fzf-lua').files { cwd = vim.fn.stdpath 'config' }
+        require('fzf-lua').files {
+          cwd = vim.fn.stdpath 'config',
+          winopts = {
+            height = 0.9,      -- window height
+            width = 0.9,       -- window width
+            row = 0.5,         -- center vertically
+            col = 0.5,         -- center horizontally
+            anchor = 'center', -- anchor point is center
+            preview = {
+              layout = 'horizontal',
+              horizontal = 'right:50%',
+            },
+          },
+        }
       end,
+
       desc = 'Find files in Neovim config',
     },
     {
@@ -221,11 +250,11 @@ return {
       function()
         require('fzf-lua').blines {
           winopts = {
-            height = 0.9, -- window height
-            width = 0.8, -- window width
-            row = 0.5, -- center vertically
-            col = 0.5, -- center horizontally
-            anchor = 'center', -- anchor point is center
+            height = 0.9,          -- window height
+            width = 0.8,           -- window width
+            row = 0.5,             -- center vertically
+            col = 0.5,             -- center horizontally
+            anchor = 'center',     -- anchor point is center
             preview = {
               layout = 'vertical', -- stack preview vertically
               vertical = 'up:50%', -- preview pane at bottom
@@ -262,7 +291,7 @@ return {
     {
       '<leader>cc',
       function()
-        require 'neoclip.fzf'()
+        require 'neoclip.fzf' ()
       end,
       desc = 'Neoclip Clipboard',
     },
@@ -310,21 +339,21 @@ return {
       end,
       desc = 'Resume last fzf-lua window',
     },
-    -- {
-    --   "<leader>z",
-    --   function()
-    --     require("fzf-lua").spell_suggest({
-    --       winopts = {
-    --         relative = "cursor",
-    --         row = 1.01,
-    --         col = 0,
-    --         width = 0.2,
-    --         height = 0.2,
-    --       },
-    --     })
-    --   end,
-    --   desc = "Spelling suggestions (Overriden default z=)",
-    -- },
+    {
+      '<leader>fs',
+      function()
+        require('fzf-lua').spell_suggest {
+          winopts = {
+            relative = 'cursor',
+            row = 1.01,
+            col = 0,
+            width = 0.2,
+            height = 0.2,
+          },
+        }
+      end,
+      desc = 'Spelling suggestions (Overriden default z=)',
+    },
     {
       '<leader><tab>',
       function()
@@ -374,6 +403,13 @@ return {
         }
       end,
       desc = 'Marks',
+    },
+    {
+      '<leader>sp',
+      function()
+        require('fzf-lua').spell_suggest()
+      end,
+      desc = 'Spelling Suggestions',
     },
   },
 }
