@@ -49,20 +49,24 @@ return {
 
     local diff = {
       'diff',
-      colored = false,
-      symbols = { added = ' ', modified = ' ', removed = ' ' }, -- changes diff symbols
+      colored = true, -- enable color
+      symbols = {
+        added = ' ',
+        modified = ' ',
+        removed = ' ',
+      },
+      diff_color = {
+        added = { fg = '#98be65' }, -- green
+        modified = { fg = '#ECBE7B' }, -- yellow
+        removed = { fg = '#FF6C6B' }, -- red
+      },
       cond = hide_in_width,
     }
 
     require('lualine').setup {
       options = {
         icons_enabled = true,
-        theme = 'kanagawa', -- Set theme based on environment variable
-        -- Some useful glyphs:
-        -- https://www.nerdfonts.com/cheat-sheet
-        --        
-        -- section_separators = { left = "", right = "" },
-        -- component_separators = { left = "", right = "" },
+        theme = 'kanagawa',
         component_separators = { left = '│', right = '│' },
         section_separators = { left = '', right = '' },
         globalstatus = true,
@@ -74,10 +78,9 @@ return {
       },
       sections = {
         lualine_a = { mode },
-        lualine_b = { 'branch' },
-        -- lualine_c = { { 'filename', path = 2 } },
-        lualine_c = { filename },
-        lualine_x = { diagnostics, diff, { 'encoding', cond = hide_in_width }, { 'filetype', cond = hide_in_width } },
+        lualine_b = { 'branch', diff },
+        lualine_c = { filename, 'searchcount', 'selectioncount' },
+        lualine_x = { diagnostics, { 'filetype', cond = hide_in_width } },
         lualine_y = { 'location' },
         lualine_z = { 'progress' },
       },
