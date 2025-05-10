@@ -24,11 +24,74 @@ run  = "close"
 desc = "Cancel input"
 
 [[manager.prepend_keymap]]
-# on  = "<A-d>"
 on   = [ "g", "o" ]
-run = 'shell -- dragon -x -i -T "$1"'
+# run = 'shell -- dragon -x -i -T "$1"'
+run = '''
+    shell "ripdrag \"$@\" 2>/dev/null &" --confirm
+'''
+desc  = "Drag n Drop"
 
 [[manager.prepend_keymap]]
 on   = [ "g", "l" ]
 run  = "plugin lazygit"
 desc = "run lazygit"
+
+[[manager.prepend_keymap]]
+on = ["g", "r"]
+run = "plugin fr rg"
+desc = "Search file by content (rg)"
+
+[[manager.prepend_keymap]]
+on = ["g", "a"]
+run = "plugin fr rga"
+desc = "Search file by content (rga)"
+
+[[manager.prepend_keymap]]
+on   = "o"
+run  = "plugin open-with-cmd --args=block"
+desc = "Open with command in the terminal"
+
+# [[manager.prepend_keymap]]
+# on   = "O"
+# run  = "plugin open-with-cmd"
+# desc = "Open with command"
+
+[[manager.prepend_keymap]]
+on = [ "u", "a" ]
+run = "plugin yamb save"
+desc = "Add bookmark"
+
+[[manager.prepend_keymap]]
+on = [ "b" ]
+run = "plugin yamb jump_by_key"
+desc = "Jump bookmark by key"
+
+[[manager.prepend_keymap]]
+on = [ "u", "G" ]
+run = "plugin yamb jump_by_fzf"
+desc = "Jump bookmark by fzf"
+
+[[manager.prepend_keymap]]
+on = [ "u", "d" ]
+run = "plugin yamb delete_by_key"
+desc = "Delete bookmark by key"
+
+[[manager.prepend_keymap]]
+on = [ "u", "D" ]
+run = "plugin yamb delete_by_fzf"
+desc = "Delete bookmark by fzf"
+
+[[manager.prepend_keymap]]
+on = [ "u", "A" ]
+run = "plugin yamb delete_all"
+desc = "Delete all bookmarks"
+
+[[manager.prepend_keymap]]
+on = [ "u", "r" ]
+run = "plugin yamb rename_by_key"
+desc = "Rename bookmark by key"
+
+[[manager.prepend_keymap]]
+on = [ "u", "R" ]
+run = "plugin yamb rename_by_fzf"
+desc = "Rename bookmark by fzf"
