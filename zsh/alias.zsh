@@ -21,7 +21,7 @@ alias play="mpv"
 alias lz="lazygit"
 alias lc="lazydocker"
 alias dox="oxker"
-alias v="nvim"
+# alias v="nvim"
 alias ex="extract"
 alias open="thunar ."
 alias vpndown='sudo wg-quick down'
@@ -31,7 +31,7 @@ alias crlist="crontab -l"
 alias fd='fd -H'
 alias password="< /dev/urandom tr -dc 'A-Za-z0-9' | head -c32 | wl-copy"
 alias delete_from_clipboard="cliphist list | fzf --no-sort | cliphist delete"
-alias clip="cliphist list | fzf --no-sort | cliphist decode | wl-copy"
+alias cf="cliphist list | fzf --no-sort --preview-window=hidden | cliphist decode | wl-copy"
 alias clear-clipboard='cliphist wipe'
 alias ram='ps axch -o cmd:15,%mem --sort=-%mem | head'
 alias cpu='ps axch -o cmd:15,%cpu --sort=-%cpu | head'
@@ -51,6 +51,8 @@ alias 777='chmod -R 777'
 alias sudoes='sudo -E -s'
 alias mk="minikube"
 alias kb="kubectl"
+alias less="bat"
+alias fz="fzf --preview-window=hidden"
 
 if [[ "$HOSTNAME" == "titan" || "$HOST" == "titan" ]]; then
   alias Down='cd $HOME/Downloads'
@@ -72,10 +74,10 @@ if command -v trash &> /dev/null; then
   alias rm='echo "This is a dangerous command. Use trash instead."'
 fi
 
-if command -v rsync &> /dev/null; then
-  alias cp='rsync -avh --progress --itemize-changes --stats'
-  # alias mvv='rsync -avh --remove-source-files --progress --itemize-changes --stats'
-fi
+# if command -v rsync &> /dev/null; then
+#   alias cp='rsync -avh --progress --itemize-changes --stats'
+#   # alias mvv='rsync -avh --remove-source-files --progress --itemize-changes --stats'
+# fi
 
 if command -v eza &> /dev/null; then
   alias ls="eza --icons -a -l --time-style relative --changed"
@@ -188,19 +190,6 @@ if command -v python &> /dev/null; then
   alias pipr="pip freeze > requirements.txt"
 fi
 
-# SYSTEMCTL
-
-alias ystatus="sudo systemctl status"
-alias yliste="systemctl list-unit-files --state=enabled"
-alias ylist="sudo systemctl list-unit-files"
-alias ystart="sudo systemctl start"
-alias ystop="sudo systemctl stop"
-alias yblock="sudo systemctl mask"
-alias yunblock="sudo systemctl unmask"
-alias yrestart="sudo systemctl reload-or-restart"
-alias yenable="sudo systemctl enable"
-alias ydisable="sudo systemctl disable"
-
 # TMUX
 
 if command -v tmux &> /dev/null; then
@@ -211,6 +200,13 @@ if command -v tmux &> /dev/null; then
   alias tk="t kill-session -t"
   alias tka="t kill-server"
   alias tks="t kill-server"
+fi
+
+# KVM
+
+
+if command -v virsh &> /dev/null; then
+  # alias list-ips-kvm="sudo virsh net-dhcp-leases default"
 fi
 
 # GIT
@@ -271,8 +267,8 @@ alias gcB='git checkout -B'
 
 # GIT CHERRY-PICK
 # alias gcp='git cherry-pick'
-alias gcpa='git cherry-pick --abort'
-alias gcpc='git cherry-pick --continue'
+# alias gcpa='git cherry-pick --abort'
+# alias gcpc='git cherry-pick --continue'
 
 # GIT CLONE
 alias gcl='git clone'

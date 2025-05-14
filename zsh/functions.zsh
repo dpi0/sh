@@ -93,7 +93,7 @@ af() {
     (
       (alias)
       (functions | grep "()" | cut -d ' ' -f1 | grep -v "^_")
-    ) | fzf | cut -d '=' -f1
+    ) | fzf --preview='' --preview-window=hidden | cut -d '=' -f1
   )
 
   eval $CMD
@@ -119,7 +119,7 @@ envf() {
 # Kill Processes
 killf() {
   local pid
-  pid=$(ps -ef | sed 1d | fzf -m | awk '{print $2}')
+  pid=$(ps -ef | sed 1d | fzf -m --preview-window=hidden | awk '{print $2}')
 
   if [ "x$pid" != "x" ]; then
     echo $pid | xargs kill -${1:-9}
@@ -163,17 +163,12 @@ manf() {
 
 # Allows searching for and executing a command from your command history interactively using fzf.
 hf() {
-	local  selected_command
-	selected_command=$(
-		history -E 1 \
-		|  awk '{$1=""; print $0}' \
-		|  awk '!x[$0]++' \
-		|  fzf  --cycle  --tac +s --no-sort  \
-			--preview 'echo {}' \
-	)
-	if [[ -n  "$selected_command" ]]; then
-		eval  "$selected_command"
-	fi
+  local cmd
+  cmd=$(history -E 1 | tac | fzf --preview='' --preview-window=hidden | awk '{$1=""; $2=""; $3=""; sub(/^ +/, ""); print}')
+  [[ -n "$cmd" ]] && {
+    command -v wl-copy &>/dev/null && printf '%s' "$cmd" | wl-copy
+    printf '%s\n' "$cmd"
+  }
 }
 
 # History fuzzy find and Ctrl+Y to copy as well
@@ -224,36 +219,41 @@ jump_to_dir_of_file_tree() {
 # Shows tree view of the hovered directory in preview window
 # As i am explicitly passing fd --type d into fzf (have to!), this overrides FZF_DEFAULT_OPTS and FZF_DEFAULT_COMMAND
 # so i have to fd commands manually here (not in other functions)
+# Shared exclude flags for fd
+FD_EXCLUDES=(
+  --exclude node-modules
+  --exclude go/pkg/mod
+  --exclude .local/share
+  --exclude .local/state
+  --exclude .vscode
+  --exclude .config/Code
+  --exclude .Trash-1000
+  --exclude .git
+  --exclude .cargo
+  --exclude .rustup
+  --exclude .cache
+  --exclude .mozilla
+  --exclude .npm
+)
+
 fzf_cd() {
   local dir
-  dir=$(fd --type d . --color=always \
-    --exclude node-modules \
-    --exclude go/pkg/mod \
-    --exclude .local/share \
-    --exclude .local/state \
-    --exclude .vscode \
-    --exclude .config/Code \
-    --exclude .Trash-1000 \
-    --exclude .git \
-    --exclude .cargo \
-    --exclude .rustup \
-    --exclude .cache \
-    --exclude .cargo \
-    --exclude .mozilla \
-    --exclude .npm \
-    --exclude .cache | \
-    fzf --exact --preview 'echo "📁 Directory: {}"; echo ""; \
-                   echo "📊 Stats:"; echo "   $(fd --type f . {} | wc -l) files, $(du -sh {} | cut -f1) size"; echo ""; \
-                   echo "🌳 Tree:"; tree -C -L 3 {} | head -100'
+  dir=$(fd --type d . --color=always "${FD_EXCLUDES[@]}" | \
+    fzf --exact --preview '
+      echo "📁 Directory: {}"; echo "";
+      echo "📊 Stats:"; echo "   $(fd --type f . {} | wc -l) files, $(du -sh {} | cut -f1) size"; echo "";
+      echo "🌳 Tree:"; tree -a -C -L 3 {} | head -100'
   ) || return
   cd "$dir" || return
 }
 
-# Open selected file using your favorite opener
-jump_to_file() {
+_jump_to_file_core() {
   local search_term="$1"
+  local search_path="$2"
   local selected_file
-  selected_file=$(fzf --query="$search_term")
+
+  selected_file=$(fd --type f . "$search_path" --color=always "${FD_EXCLUDES[@]}" | \
+    fzf --query="$search_term")
 
   if [ -n "$selected_file" ]; then
     local file_extension="${selected_file##*.}"
@@ -280,6 +280,16 @@ jump_to_file() {
     command -v wl-copy &> /dev/null && echo "$selected_file" | wl-copy
     echo "$selected_file"
   fi
+}
+
+# Search from current directory
+jump_to_file() {
+  _jump_to_file_core "$1" "."
+}
+
+# Search from $HOME
+jump_to_file_from_home() {
+  _jump_to_file_core "$1" "$HOME"
 }
 
 # Grep Fuzzy Search with a forked rga-fzf to open files in nvim only
@@ -325,14 +335,6 @@ z_fzf() {
           printf "   %s files, %s total size\n" "$file_count" "$dir_size"
           echo ""
 
-          echo "📂 Largest files:"
-          fd --type f . "$dir" -x du -b {} 2>/dev/null | sort -nr | head -5 | awk '\''{printf "   %.1f MiB  %s\n", $1/1048576, $2}'\'' 
-          echo ""
-
-          echo "🕒 Recent files:"
-          fd --type f --changed-within 7d . "$dir" -x basename 2>/dev/null | head -5 | sed "s/^/   /"
-          echo ""
-
           echo "🔧 Git status:"
           if git -C "$dir" rev-parse --is-inside-work-tree &>/dev/null; then
             git -C "$dir" status --short -b | head -5 | sed "s/^/   /"
@@ -342,9 +344,210 @@ z_fzf() {
           echo ""
 
           echo "🌳 Tree (depth 2):"
-          tree -C -L 2 "$dir" 2>/dev/null | head -100
+          tree -a -C -L 2 "$dir" 2>/dev/null | head -100
         ' \
   ) || return
 
   cd "$dir" || return
+}
+
+# simple implementation of 'watch' command. watcher -n 2 -t 30s 'curl -fsSL ip.me'
+watcher() {
+  local interval=1
+  local duration=0
+  local cmd=""
+  local prev_output=""
+  local start_ts end_ts duration_s
+  local color_changed="\033[1;32m"  # green
+  local color_same="\033[1;90m"     # gray
+  local color_reset="\033[0m"
+
+  # Parse flags
+  while [[ "$1" == -* ]]; do
+    case "$1" in
+      -n)
+        shift
+        interval="$1"
+        ;;
+      -t)
+        shift
+        duration="$1"
+        ;;
+      *)
+        echo "Usage: watcher [-n seconds] [-t duration] 'command'"
+        return 1
+        ;;
+    esac
+    shift
+  done
+
+  cmd="$*"
+  if [[ -z "$cmd" ]]; then
+    echo "Usage: watcher [-n seconds] [-t duration] 'command'"
+    return 1
+  fi
+
+  # Parse duration to seconds
+  if [[ "$duration" =~ ^([0-9]+)([smh]?)$ ]]; then
+    local val="${BASH_REMATCH[1]}"
+    local unit="${BASH_REMATCH[2]}"
+    case "$unit" in
+      s|"") duration_s=$val ;;
+      m)    duration_s=$((val * 60)) ;;
+      h)    duration_s=$((val * 3600)) ;;
+      *)    echo "Invalid duration unit: $unit"; return 1 ;;
+    esac
+  else
+    duration_s=0  # infinite if not specified
+  fi
+
+  start_ts=$(date +%s)
+  [[ $duration_s -gt 0 ]] && end_ts=$((start_ts + duration_s))
+
+  while [[ $duration_s -eq 0 || $(date +%s) -lt $end_ts ]]; do
+    printf "\033[1;34m[%s]\033[0m \033[1;32m> %s\033[0m\n" "$(date '+%F %T')" "$cmd"
+    current_output="$(eval "$cmd" 2>&1)"
+
+    if [[ "$current_output" != "$prev_output" ]]; then
+      echo -e "${color_changed}${current_output}${color_reset}"
+    else
+      echo -e "${color_same}${current_output}${color_reset}"
+    fi
+
+    prev_output="$current_output"
+    sleep "$interval"
+  done
+}
+
+v() {
+  if [ -z "$1" ]; then
+    echo "Usage: b <path/to/file>"
+    return 1
+  fi
+
+  local file_path="$1"
+  local dir_path
+  dir_path=$(dirname "$file_path")
+
+  # Check if directory already exists
+  if [ ! -d "$dir_path" ]; then
+    echo -n "Do you want to create $PWD/$dir_path (y/N)? "
+    read -r response
+
+    if [[ "$response" != "" && ! "$response" =~ ^[Yy]$ ]]; then
+        echo "Cancelled."
+        return 0
+    fi
+
+    mkdir -p "$dir_path" || {
+        echo "Failed to create directory."
+        return 1
+    }
+  fi
+
+  # Choose editor
+  local editor_cmd
+  if command -v nvim &>/dev/null; then
+    editor_cmd="nvim"
+  elif command -v vim &>/dev/null; then
+    editor_cmd="vim"
+  else
+    echo "Neither nvim nor vim found."
+    return 1
+  fi
+
+  "$editor_cmd" "$file_path"
+}
+
+
+list-ips-kvm() {
+  for domain in $(virsh list --name --state-running); do
+    echo "$domain:"
+    virsh domifaddr "$domain"
+  done
+}
+
+clone-vm() {
+  if [ $# -lt 2 ]; then
+    echo "Usage: clone-vm <original-vm-name> <new-vm-name>"
+    echo "Description:"
+    echo "  Clones an existing VM using virt-clone."
+    echo ""
+    echo "Arguments:"
+    echo "  <original-vm-name>  Name of the existing virtual machine to clone."
+    echo "  <new-vm-name>       Desired name for the cloned virtual machine."
+    return 1
+  fi
+
+  exisiting_vm="$1"
+  new_vm="$2"
+
+  if virsh dominfo "$new_vm" &>/dev/null; then
+    echo "VM '$new_vm' already exists. Exiting..."
+    virsh list --all
+    return 1
+  fi
+
+  virt-clone \
+  --original "$exisiting_vm" \
+  --name "$new_vm" \
+  --auto-clone
+}
+
+shutdown-all-vm() {
+  for vm in $(virsh list --name); do
+    virsh shutdown "$vm"
+  done
+  virsh list --all
+}
+
+start-all-vm() {
+  for vm in $(virsh list --all --name); do
+    virsh start "$vm"
+  done
+}
+
+remove-vm() {
+  vm="$1"
+
+  if ! virsh dominfo "$vm" &>/dev/null; then
+    echo "VM '$vm' does not exist."
+    virsh list --all
+    return 1
+  fi
+
+  printf "Are you sure you want to completely remove VM '%s'? (y/n): " "$vm"
+  read confirm
+
+  if [[ "$confirm" == [Yy] ]]; then
+    vm_state=$(virsh domstate "$vm" 2>/dev/null)
+
+    if [[ "$vm_state" != "shut off" ]]; then
+      echo "Shutting down $vm..."
+      virsh shutdown "$vm"
+      echo "Waiting for $vm to shut down..."
+      for i in {1..30}; do
+        sleep 1
+        [[ "$(virsh domstate "$vm")" == "shut off" ]] && break
+      done
+    else
+      echo "$vm is already shut off."
+    fi
+
+    echo "Removing $vm..."
+    virsh undefine --nvram --remove-all-storage "$vm"
+    virsh list --all
+  else
+    echo "Aborted."
+  fi
+}
+
+batf() {
+  local filename="$1"
+  if [[ ! -f "$filename" ]]; then
+    echo "Error: File '$filename' does not exist."
+    return 1
+  fi
+  local extension="${filename##*.}"
+  tail -f "$filename" | bat -l "$extension" --paging=never
 }
