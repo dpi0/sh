@@ -1,5 +1,3 @@
-#!/use/bin/env zsh
-
 # -----------------------------------------
 # use showkey -a to get the shortcut name
 # or cat -v
@@ -82,7 +80,7 @@ bindkey -s '^[v' 'v .^M'
 bindkey -s '^[b' 'lf .^M'
 bindkey -s '^[B' 'lf $HOME/Screenshots^M'
 bindkey -s '^[f' 'jump_to_file^M'
-bindkey -s '^[F' 'rga-my-fzf^M'
+bindkey -s '^[F' 'jump_to_file_from_home^M'
 bindkey -s '^[g' 'rga-my-fzf^M'
 bindkey -s '^[d' 'fzf_cd^M'
 bindkey -s '^[c' 'jump_to_dir_of_file_tree^M'

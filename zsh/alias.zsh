@@ -188,19 +188,6 @@ if command -v python &> /dev/null; then
   alias pipr="pip freeze > requirements.txt"
 fi
 
-# SYSTEMCTL
-
-alias ystatus="sudo systemctl status"
-alias yliste="systemctl list-unit-files --state=enabled"
-alias ylist="sudo systemctl list-unit-files"
-alias ystart="sudo systemctl start"
-alias ystop="sudo systemctl stop"
-alias yblock="sudo systemctl mask"
-alias yunblock="sudo systemctl unmask"
-alias yrestart="sudo systemctl reload-or-restart"
-alias yenable="sudo systemctl enable"
-alias ydisable="sudo systemctl disable"
-
 # TMUX
 
 if command -v tmux &> /dev/null; then
@@ -271,8 +258,8 @@ alias gcB='git checkout -B'
 
 # GIT CHERRY-PICK
 # alias gcp='git cherry-pick'
-alias gcpa='git cherry-pick --abort'
-alias gcpc='git cherry-pick --continue'
+# alias gcpa='git cherry-pick --abort'
+# alias gcpc='git cherry-pick --continue'
 
 # GIT CLONE
 alias gcl='git clone'

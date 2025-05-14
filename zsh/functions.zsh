@@ -93,7 +93,7 @@ af() {
     (
       (alias)
       (functions | grep "()" | cut -d ' ' -f1 | grep -v "^_")
-    ) | fzf | cut -d '=' -f1
+    ) | fzf --preview='' --preview-window=hidden | cut -d '=' -f1
   )
 
   eval $CMD
@@ -163,17 +163,12 @@ manf() {
 
 # Allows searching for and executing a command from your command history interactively using fzf.
 hf() {
-	local  selected_command
-	selected_command=$(
-		history -E 1 \
-		|  awk '{$1=""; print $0}' \
-		|  awk '!x[$0]++' \
-		|  fzf  --cycle  --tac +s --no-sort  \
-			--preview 'echo {}' \
-	)
-	if [[ -n  "$selected_command" ]]; then
-		eval  "$selected_command"
-	fi
+  local cmd
+  cmd=$(history -E 1 | tac | fzf --preview='' --preview-window=hidden | awk '{$1=""; $2=""; $3=""; sub(/^ +/, ""); print}')
+  [[ -n "$cmd" ]] && {
+    command -v wl-copy &>/dev/null && printf '%s' "$cmd" | wl-copy
+    printf '%s\n' "$cmd"
+  }
 }
 
 # History fuzzy find and Ctrl+Y to copy as well
@@ -224,36 +219,41 @@ jump_to_dir_of_file_tree() {
 # Shows tree view of the hovered directory in preview window
 # As i am explicitly passing fd --type d into fzf (have to!), this overrides FZF_DEFAULT_OPTS and FZF_DEFAULT_COMMAND
 # so i have to fd commands manually here (not in other functions)
+# Shared exclude flags for fd
+FD_EXCLUDES=(
+  --exclude node-modules
+  --exclude go/pkg/mod
+  --exclude .local/share
+  --exclude .local/state
+  --exclude .vscode
+  --exclude .config/Code
+  --exclude .Trash-1000
+  --exclude .git
+  --exclude .cargo
+  --exclude .rustup
+  --exclude .cache
+  --exclude .mozilla
+  --exclude .npm
+)
+
 fzf_cd() {
   local dir
-  dir=$(fd --type d . --color=always \
-    --exclude node-modules \
-    --exclude go/pkg/mod \
-    --exclude .local/share \
-    --exclude .local/state \
-    --exclude .vscode \
-    --exclude .config/Code \
-    --exclude .Trash-1000 \
-    --exclude .git \
-    --exclude .cargo \
-    --exclude .rustup \
-    --exclude .cache \
-    --exclude .cargo \
-    --exclude .mozilla \
-    --exclude .npm \
-    --exclude .cache | \
-    fzf --exact --preview 'echo "📁 Directory: {}"; echo ""; \
-                   echo "📊 Stats:"; echo "   $(fd --type f . {} | wc -l) files, $(du -sh {} | cut -f1) size"; echo ""; \
-                   echo "🌳 Tree:"; tree -C -L 3 {} | head -100'
+  dir=$(fd --type d . --color=always "${FD_EXCLUDES[@]}" | \
+    fzf --exact --preview '
+      echo "📁 Directory: {}"; echo "";
+      echo "📊 Stats:"; echo "   $(fd --type f . {} | wc -l) files, $(du -sh {} | cut -f1) size"; echo "";
+      echo "🌳 Tree:"; tree -a -C -L 3 {} | head -100'
   ) || return
   cd "$dir" || return
 }
 
-# Open selected file using your favorite opener
-jump_to_file() {
+_jump_to_file_core() {
   local search_term="$1"
+  local search_path="$2"
   local selected_file
-  selected_file=$(fzf --query="$search_term")
+
+  selected_file=$(fd --type f . "$search_path" --color=always "${FD_EXCLUDES[@]}" | \
+    fzf --query="$search_term")
 
   if [ -n "$selected_file" ]; then
     local file_extension="${selected_file##*.}"
@@ -280,6 +280,16 @@ jump_to_file() {
     command -v wl-copy &> /dev/null && echo "$selected_file" | wl-copy
     echo "$selected_file"
   fi
+}
+
+# Search from current directory
+jump_to_file() {
+  _jump_to_file_core "$1" "."
+}
+
+# Search from $HOME
+jump_to_file_from_home() {
+  _jump_to_file_core "$1" "$HOME"
 }
 
 # Grep Fuzzy Search with a forked rga-fzf to open files in nvim only
@@ -325,14 +335,6 @@ z_fzf() {
           printf "   %s files, %s total size\n" "$file_count" "$dir_size"
           echo ""
 
-          echo "📂 Largest files:"
-          fd --type f . "$dir" -x du -b {} 2>/dev/null | sort -nr | head -5 | awk '\''{printf "   %.1f MiB  %s\n", $1/1048576, $2}'\'' 
-          echo ""
-
-          echo "🕒 Recent files:"
-          fd --type f --changed-within 7d . "$dir" -x basename 2>/dev/null | head -5 | sed "s/^/   /"
-          echo ""
-
           echo "🔧 Git status:"
           if git -C "$dir" rev-parse --is-inside-work-tree &>/dev/null; then
             git -C "$dir" status --short -b | head -5 | sed "s/^/   /"
@@ -342,7 +344,7 @@ z_fzf() {
           echo ""
 
           echo "🌳 Tree (depth 2):"
-          tree -C -L 2 "$dir" 2>/dev/null | head -100
+          tree -a -C -L 2 "$dir" 2>/dev/null | head -100
         ' \
   ) || return
 
