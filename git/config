@@ -1,6 +1,7 @@
 [user]
   name = divyansh
   email = dpi0.dev@proton.me
+	signingkey = 2E13AF5C594A51F1
 
 [init]
   defaultBranch = main
@@ -15,7 +16,8 @@
 [commit]
   # includes the full commit diff in the text editor when composing the commit message
   verbose = true
-  gpgSign = false
+	gpgSign = true
+  template = ~/.config/git/template
 
 [merge]
   # https://www.ductile.systems/zdiff3/
@@ -148,6 +150,14 @@
   # When a mistyped Git command closely resembles a valid one
   # this setting prompts the user with a suggestion before executing the corrected command.
   autoCorrect = prompt
+
+# git's own credential helper
+[credential]
+  ; helper = cache # caches your credentials in memory for a default 15 min
+  # Or use one of these:
+	helper = store
+	; helper = /usr/lib/git-core/git-credential-libsecret
+  # helper = manager-core # uses GCM (git credential manager) which uses OS-native keychains (must install GCM first)
 
 [credential "https://github.com"]
   helper = 
