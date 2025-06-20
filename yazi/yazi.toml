@@ -63,4 +63,10 @@ prepend_previewers = [
   { mime = "application/x-7z-compressed", run = "ouch" },
   { mime = "application/x-rar", run = "ouch" },
   { mime = "application/x-xz", run = "ouch" },
+
+  # VERY USEFUL: disable yazi video preview
+  { name = "video/*", mime = "video/*", run = "noop" },
 ]
+
+# VERY USEFUL: disable yazi video preview
+prepend_preloaders = [{ name = "video/*", mime = "video/*", run = "noop" }]
