@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+if [ "$#" -eq 0 ]; then
+  echo "🟡 No argument given. Exiting..."
+  echo "Usage: di-tag IMAGE_NAME"
+  echo "Example: di-tag nginx"
+  exit 1
+fi
+
+if ! command -v regctl &>/dev/null; then
+  echo "❌ ERROR: 'regctl' not installed. Exiting..."
+  exit 1
+fi
+
+echo "🔹 Running: regctl tag ls '$1' | sort -V -r | bat"
+
+regctl tag ls "$1" | sort -V -r | bat

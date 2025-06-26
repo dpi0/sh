@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+if ! command -v bat && ! command -v tail &>/dev/null; then
+  echo "❌ ERROR: 'bat' and 'tail' not installed. Exiting..."
+  exit 1
+fi
+
+if [ "$#" -eq 0 ]; then
+  echo "🟡 No argument given. Exiting..."
+  echo "Usage: batf FILE"
+  echo "Example: sudo /path/to/batf /var/log/syslog"
+  exit 1
+fi
+
+FILE="$1"
+
+if [[ ! -f "$FILE" ]]; then
+  echo "❌ ERROR: File '$FILE' does not exist."
+  exit 1
+fi
+
+EXTENSION="${FILE##*.}"
+
+tail -f "$FILE" | bat -l "$EXTENSION" --paging=never
