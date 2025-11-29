@@ -2,56 +2,49 @@ PS1='\[\e[38;5;39m\]\u\[\e[0m\]@\[\e[38;5;135m\]\h\[\e[0m\] in \[\e[38;5;220;1m\
 
 alias ..='cd ..'
 alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias l='ls -lah --color=auto'
-alias ls='ls -lah --color=auto'
 alias md='mkdir -p'
-alias c='clear'
 alias lf="yazi"
-alias lz="lazygit"
-alias slf="sudo -E yazi"
-alias h="history -E 1"
+alias slf="-E yazi"
+alias tx="tmux"
 alias re="source ~/.bashrc && exec bash"
-alias dx='dotenvx'
+alias lz="lazygit"
+alias fd='fd -H'
+alias v="nvim"
+alias vim="nvim"
+alias svim="-E nvim"
+alias k="kubectl"
+alias kx="kubectx"
+alias kns="kubens"
 alias fz="fzf --preview-window=hidden"
+alias c='clear'
+alias oc='opencode'
+alias h="helm"
+alias p='pacman'
+alias py="python3"
+alias d="docker"
+alias di="docker image"
+alias dpsa="docker ps -a"
+alias de="docker exec"
+alias dc="docker compose"
+alias dn="docker network"
+alias dv="docker volume"
+alias g='git'
 alias ga='git add'
-alias gaa='git add --all'
-alias gb='git branch'
-alias gba='git branch --all'
-alias gco='git checkout'
-alias gcob='git checkout -b'
 alias gcl='git clone'
-alias gd='git diff'
+alias gcmt='git commit --verbose'
 alias gf='git fetch'
 alias gfo='git fetch origin'
 alias gm='git merge'
-alias gma='git merge --abort'
+alias gl='git pull'
 alias gp='git push'
+alias gpv='git push --verbose'
 alias gr='git remote'
 alias grv='git remote --verbose'
-alias gra='git remote add'
-alias d="docker"
-alias di="docker image"
-alias dpsa="docker ps -a --format 'table {{.Names}}\t{{.ID}}\t{{.Image}}\t{{.Status}}'"
-alias wdpsa='watch -n 1 "docker ps -a --format \"table {{.Names}}\t{{.ID}}\t{{.Image}}\t{{.Status}}\""'
-alias dst="docker stats"
-alias de="docker exec"
-alias dcu="docker compose up"
-alias dcd="docker compose down"
-alias dr="docker run"
-alias dn="docker network"
-alias dnl="docker network ls"
-alias dv="docker volume"
-alias dvl="docker volume ls"
-alias rm='rm -iv'
-alias cp='cp -i'
-alias mv='mv -i'
-
-if command -v rsync &>/dev/null; then
-  alias cpp='rsync --archive --verbose --human-readable --progress --itemize-changes --stats'
-  alias mvv='rsync -avh --remove-source-files --progress --itemize-changes --stats'
-fi
+alias gst='git status'
+alias uncommit="git reset HEAD~1"             # Undo the last commit, keep changes staged
+alias recommit="git commit --amend --no-edit" # Amend last commit without changing message
+alias editcommit="git commit --amend"         # Amend last commit and edit message
+alias undocommit="git reset --soft HEAD~1"    # Undo last commit, keep changes staged
 
 if [ -d "$HOME/.local/bin" ]; then
   PATH="$HOME/.local/bin:$PATH"
@@ -62,26 +55,6 @@ HISTSIZE=10000
 HISTFILESIZE=20000
 shopt -s histappend
 shopt -s cmdhist
-
-sysinfo() {
-  echo "System Information:"
-  echo "=================="
-  echo "Hostname: $(hostname)"
-  echo "Uptime: $(uptime -p 2>/dev/null || uptime)"
-  echo "Load: $(cat /proc/loadavg | cut -d' ' -f1-3)"
-  echo "Memory: $(free -h | grep Mem | awk '{print $3 "/" $2}')"
-  echo "Disk: $(df -h / | tail -1 | awk '{print $3 "/" $2 " (" $5 " used)"}')"
-}
-
-serverstatus() {
-  echo "Quick Server Status Check:"
-  echo "========================="
-  echo "Load Average: $(cat /proc/loadavg | cut -d' ' -f1-3)"
-  echo "Memory Usage: $(free | grep Mem | awk '{printf("%.2f%%\n", $3/$2 * 100.0)}')"
-  echo "Disk Usage: $(df -h / | tail -1 | awk '{print $5}')"
-  echo "Active Connections: $(ss -tun | wc -l)"
-  echo "Running Processes: $(ps aux | wc -l)"
-}
 
 extract() {
   for archive in $*; do
