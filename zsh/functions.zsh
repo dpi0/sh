@@ -15,57 +15,6 @@ sd() {
   builtin cd -- "$1"
 }
 
-# Count the total number of files in $PWD
-file_count() {
-  local dir="${1:-$(pwd)}"
-  local group=false
-
-  if [ "$1" = "-g" ] || [ "$1" = "--group" ]; then
-    group=true
-    dir="${2:-$(pwd)}"
-  fi
-
-  if $group; then
-    fd -H -t f . "$dir" | awk -F. '{ext = $NF; if (ext != $0) {count[ext]++}} END {for (ext in count) print ext, count[ext]}'
-  else
-    fd -H . "$dir" | wc -l
-  fi
-}
-
-# Remove a sensitive variable from shell history
-remove_variable_from_history() {
-  local var_to_remove="$1"
-  local temp_file=$(mktemp)
-
-  # Use ripgrep to find lines containing the variable and list them
-  local found_lines=$(rg --color=always "$var_to_remove" ~/.zsh_history)
-
-  if [[ -z "$found_lines" ]]; then
-    echo "No lines containing '$var_to_remove' found in ~/.zsh_history."
-    return
-  fi
-
-  # Display the found lines
-  echo "The following lines will be deleted:"
-  echo "$found_lines"
-
-  # Use ripgrep to exclude lines containing the variable and write to the temporary file
-  rg -v "$var_to_remove" ~/.zsh_history >"$temp_file"
-
-  # Overwrite the original history file with the cleaned version
-  mv "$temp_file" ~/.zsh_history
-
-  echo "Deleted $(echo "$found_lines" | wc -l) lines containing '$var_to_remove'."
-
-  # Reload the shell
-  exec zsh
-}
-
-# Pacman log - Fuzzy Find
-plf() {
-  cat /var/log/pacman.log | grep -E "\[ALPM\] (installed|removed|upgraded|upgraded|downgraded)" | awk '{print $1, $2, $3, $4, $5, $6}' | sort -r | fzf
-}
-
 # All currently installed packages - Fuzzy Find
 inf() {
   pacman -Qq | fzf --preview='pacman -Qi {}'
@@ -74,17 +23,6 @@ inf() {
 # Pacman main repo - Fuzzy Find
 in() {
   pacman -Slq | fzf -q "$1" -m --preview 'pacman -Si {1}' | xargs -ro pacman -S
-}
-
-# Restart compose project
-dcr() {
-  if [ -z "$1" ]; then
-    echo "Usage: dcr <service_or_project_name>. Runs docker compose down; docker compose up -d"
-    return 1
-  fi
-  NAME="$1"
-  docker compose down "$NAME"
-  docker compose up -d "$NAME"
 }
 
 # Alias - Fuzzy Find
@@ -99,122 +37,11 @@ af() {
   eval $CMD
 }
 
-# https://github.com/beauwilliams/awesome-fzf
-
-# cd - Fuzzy Find
-# cdf() {
-#   local dir
-#   dir=$(fd --type d --hidden --exclude '.*' . "${1:-.}" 2> /dev/null | fzf +m) &&
-#     cd "$dir"
-#   ls
-# }
-
 # Environment Variables
 envf() {
   local out
   out=$(env | awk -F= '{printf "\033[1;36m%s\033[0m=\033[1;32m%s\033[0m\n", $1, $2}' | fzf --ansi)
   echo "$(echo "$out" | sed 's/.*=\x1b\[1;32m//' | sed 's/\x1b\[0m.*//')"
-}
-
-# Kill Processes
-killf() {
-  local pid
-  pid=$(ps -ef | sed 1d | fzf -m --preview-window=hidden | awk '{print $2}')
-
-  if [ "x$pid" != "x" ]; then
-    echo $pid | xargs kill -${1:-9}
-  fi
-}
-
-# Git Status - Fuzzy Find
-# gst() {
-#     git rev-parse --git-dir > /dev/null 2>&1 || { echo "You are not in a git repository" && return }
-#     local selected
-#     selected=$(git -c color.status=always status --short |
-#         fzf --height 50% "$@" --border -m --ansi --nth 2..,.. \
-#         --preview '(git diff --color=always -- {-1} | sed 1,4d; cat {-1}) | head -500' |
-#         cut -c4- | sed 's/.* -> //')
-#             if [[ $selected ]]; then
-#                 for prog in $(echo $selected);
-#                 do $EDITOR $prog; done;
-#             fi
-# }
-
-# https://github.com/happycod3r/fzf-tools#documentation
-
-# Fuzzy search the man pages
-manf() {
-  local selected_command
-  selected_command=$(
-    man -k . |
-      awk '{print $1}' |
-      sort |
-      uniq |
-      fzf --multi --cycle \
-        --preview='echo {}'
-  )
-  if [[ -n "$selected_command" ]]; then
-    man "$selected_command" |
-      fzf --multi --cycle --tac --no-sort \
-        --preview='echo {}' \
-        --layout='reverse-list'
-  fi
-}
-
-# Allows searching for and executing a command from your command history interactively using fzf.
-hf() {
-  local cmd
-  cmd=$(history -E 1 | tac | fzf --preview='' --preview-window=hidden | awk '{$1=""; $2=""; $3=""; sub(/^ +/, ""); print}')
-  [[ -n "$cmd" ]] && {
-    command -v wl-copy &>/dev/null && printf '%s' "$cmd" | wl-copy
-    printf '%s\n' "$cmd"
-  }
-}
-
-# History fuzzy find and Ctrl+Y to copy as well
-# only problem is hitting enter doesn't produce stdout of the command
-# so going with CTRL+R for fzf-tab for now, otherwise this is nice
-# fzf-history-widget() {
-#   local selected
-#   selected=$(builtin history -E 1 | fzf \
-#     --layout=reverse \
-#     --preview='echo {}' \
-#     --preview-window=up:3:hidden:wrap \
-#     --bind='ctrl-/:toggle-preview' \
-#     --bind='ctrl-y:execute-silent(echo -n {4..} | wl-copy)+abort' \
-#     --color=header:italic \
-#     --header='Press CTRL-Y to copy command into clipboard' \
-#     --bind='ctrl-u:preview-page-up,ctrl-d:preview-page-down,shift-up:preview-top,shift-down:preview-bottom')
-#
-#   if [[ -n $selected ]]; then
-#     BUFFER="${selected#* }"
-#     CURSOR=$#BUFFER
-#     zle reset-prompt
-#   fi
-# }
-
-# Fuzzy find on all files recursively, and jump to the directory of the selected file
-jump_to_dir_of_file() {
-  local file
-  file=$(
-    fzf \
-      --walker-skip .git,node_modules,target,.cache \
-      --preview 'bat -n --color=always {}'
-  ) || return
-  echo "$file"
-  cd "$(dirname "$file")" || return
-}
-
-# Same as above, BUT show a tree for the respective file's parent directory
-jump_to_dir_of_file_tree() {
-  local file
-  file=$(
-    fzf \
-      --walker-skip .git,node_modules,target,.cache \
-      --preview 'tree -C -L 2 $(dirname {}) | head -100; echo ""; echo "Selected: {}"; echo ""; ls -la $(dirname {})/{} 2>/dev/null || echo "Directory"'
-  ) || return
-  echo "$file"
-  cd "$(dirname "$file")" || return
 }
 
 # Fuzzy find directories only and change to selected directory
@@ -225,6 +52,7 @@ jump_to_dir_of_file_tree() {
 FD_EXCLUDES=(
   --exclude node-modules
   --exclude go/pkg/mod
+  --exclude Android
   --exclude .local/share
   --exclude .local/state
   --exclude .vscode
@@ -236,6 +64,32 @@ FD_EXCLUDES=(
   --exclude .cache
   --exclude .mozilla
   --exclude .npm
+  --exclude .bun
+  --exclude .terrascan
+  --exclude .bundle
+  --exclude .gradle
+  --exclude .pub-cache
+  --exclude .config/libreoffice/
+  --exclude .flutter-devtools
+  --exclude .claude
+  --exclude .dart-tool
+  --exclude .dotnet
+  --exclude .opencode
+  --exclude .kube
+  --exclude .dartServer
+  --exclude .keychain
+  --exclude .java
+  --exclude .password-store
+  --exclude .android
+  --exclude .gemini
+  --exclude .vagrant.d
+  --exclude .config
+  --exclude .zen
+  --exclude .tmux
+  --exclude .ansible
+  --exclude .docker
+  --exclude .gnupg
+  --exclude .logseq
 )
 
 fzf_cd() {
@@ -320,83 +174,21 @@ rga-my-fzf() {
   fi
 }
 
-# Zoxide with a tree preview pane using fzf!
-z_fzf() {
+# Zoxide + fzf!
+jump_to_dir() {
   local dir
   dir=$(
-    zoxide query -ls | awk '{$1=""; sub(/^ /, ""); print}' |
-      fzf --exact \
-        --preview '
-          dir=$(echo {} | xargs realpath 2>/dev/null)
-          [[ -z "$dir" || ! -d "$dir" ]] && exit
-
-          echo "📊 Stats:"
-          file_count=$(fd --type f . "$dir" 2>/dev/null | wc -l)
-          dir_size=$(du -sh "$dir" 2>/dev/null | cut -f1)
-          printf "   %s files, %s total size\n" "$file_count" "$dir_size"
-          echo ""
-
-          echo "🔧 Git status:"
-          if git -C "$dir" rev-parse --is-inside-work-tree &>/dev/null; then
-            git -C "$dir" status --short -b | head -5 | sed "s/^/   /"
-          else
-            echo "   Not a git repository."
-          fi
-          echo ""
-
-          echo "🌳 Tree (depth 2):"
-          tree -a -C -L 2 "$dir" 2>/dev/null | head -100
-        ' \
-        --preview-window=right:30%
+    zoxide query --list |
+      fzf --preview-window=hidden
   ) || return
 
   cd "$dir" || return
 }
 
-v() {
-  if [ -z "$1" ]; then
-    echo "Usage: b <path/to/file>"
-    return 1
-  fi
-
-  local file_path="$1"
-  local dir_path
-  dir_path=$(dirname "$file_path")
-
-  # Check if directory already exists
-  if [ ! -d "$dir_path" ]; then
-    echo -n "Do you want to create $PWD/$dir_path (y/N)? "
-    read -r response
-
-    if [[ "$response" != "" && ! "$response" =~ ^[Yy]$ ]]; then
-      echo "Cancelled."
-      return 0
-    fi
-
-    mkdir -p "$dir_path" || {
-      echo "Failed to create directory."
-      return 1
-    }
-  fi
-
-  # Choose editor
-  local editor_cmd
-  if command -v nvim &>/dev/null; then
-    editor_cmd="nvim"
-  elif command -v vim &>/dev/null; then
-    editor_cmd="vim"
-  else
-    echo "Neither nvim nor vim found."
-    return 1
-  fi
-
-  "$editor_cmd" "$file_path"
-}
-
 list-ips-kvm() {
   for domain in $(virsh list --name --state-running); do
     echo "$domain:"
-    virsh domifaddr "$domain"
+    virsh domifaddr "$domain" --source arp
   done
 }
 
@@ -494,39 +286,99 @@ start-vm() {
   done
 }
 
-download-video() {
-  yt-dlp --ignore-config --simulate "$1" >/dev/null 2>&1
-  if [ $? -ne 0 ]; then
-    echo "Invalid or inaccessible URL: $1"
-    exit 1
+txr() {
+  if [ $# -lt 1 ]; then
+    echo "Tmux command runner in the bg. \nUsage: txr \"command\" [session-name] (optional) \nExample:\n  txr 'gh markdown-preview ~/projects/kubernetes/from-scratch-kubeadm/README.md' readme-preview"
+    return 1
   fi
 
-  # The yt-dlp command as a variable for easy printing
-  cmd="yt-dlp \
-    --newline \
-    -o \"$HOME/Downloads/Videos/%(title)s.%(ext)s\" \
-    --embed-subs \
-    --write-sub \
-    --sub-lang en \
-    --embed-thumbnail \
-    --merge-output-format mp4 \
-    --format bestvideo+bestaudio \
-    --ignore-config \
-    --add-metadata \
-    \"$1\""
+  local cmd="$1"
+  local session="$2"
 
-  echo "🔹 Running: $cmd"
+  if [ -n "$session" ]; then
+    echo "Running: tmux new-session -d -s '$session' '$cmd'"
+    tmux new-session -d -s "$session" "$cmd"
+  else
+    tmux new-session -d "$cmd"
+  fi
 
-  yt-dlp \
-    --newline \
-    -o "$HOME/Downloads/Videos/%(title)s.%(ext)s" \
-    --embed-subs \
-    --write-sub \
-    --sub-lang en \
-    --embed-thumbnail \
-    --merge-output-format mp4 \
-    --format bestvideo+bestaudio \
-    --ignore-config \
-    --add-metadata \
-    "$1"
+  echo "Running: 'tmux ls'"
+  tmux ls
+}
+
+# Fuzzy find from the list of running tmux sessions, on enter hit - attach to that session
+txa() {
+  local session
+  session=$(tmux ls 2>/dev/null |
+    fzf --preview '
+            session_name=$(echo {} | cut -d: -f1)
+            tmux list-windows -t "$session_name" -F "▶️ W#{window_index}: #{window_name} #{window_flags}" 2>/dev/null | \
+            while IFS= read -r win; do
+                win_idx=$(echo "$win" | grep -oE "[0-9]+")
+                echo "$win"
+                tmux list-panes -t "$session_name:$win_idx" \
+                    -F "    └─ 🟫 P#{pane_index}: #{pane_current_command} [#{pane_width}x#{pane_height}] #{pane_current_path} PID=#{pane_pid} #{?pane_active,★,}" 2>/dev/null
+            done
+        ' --preview-window=down:wrap)
+
+  [ -n "$session" ] && tmux attach -t "$(echo "$session" | cut -d: -f1)"
+}
+
+trashe() {
+  trash list |
+    fzf --multi --preview "" --preview-window=hidden |
+    awk '{print $NF}' |
+    xargs trash empty --match=exact --force
+}
+
+trashr() {
+  trash list |
+    fzf --multi --preview "" --preview-window=hidden |
+    awk '{print $NF}' |
+    xargs trash restore --match=exact --force
+}
+
+copydir() {
+  if command -v wl-copy &>/dev/null; then
+    print -n $PWD | wl-copy
+  else
+    echo "wl-copy is not installed. Cannot copy current directory."
+  fi
+}
+
+copylastcommand() {
+  if command -v wl-copy &>/dev/null; then
+    fc -ln -1 | tr -d '\n' | wl-copy
+  else
+    echo "wl-copy is not installed. Cannot copy last command."
+  fi
+}
+
+copybuffer() {
+  if command -v wl-copy &>/dev/null; then
+    echo "$BUFFER" | wl-copy
+  else
+    echo "Error! Couldn't copy current line. wl-copy not present"
+  fi
+}
+
+go_forward_in_words() {
+  local WORDCHARS=${WORDCHARS//[-\/,.:;_=]/}
+  zle forward-word
+}
+
+go_back_in_words() {
+  local WORDCHARS=${WORDCHARS//[-\/,.:;_=]/}
+  zle backward-word
+}
+
+delete_word() {
+  local WORDCHARS=${WORDCHARS//[-\/,.:;_=]/}
+  zle backward-delete-word
+}
+
+zvm_vi_yank() {
+  zvm_yank
+  printf %s "${CUTBUFFER}" | wl-copy -n
+  zvm_exit_visual_mode
 }
