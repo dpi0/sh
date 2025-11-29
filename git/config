@@ -1,7 +1,7 @@
 [user]
   name = divyansh
   email = dpi0.dev@proton.me
-	signingkey = 2E13AF5C594A51F1
+	signingkey = 5121E1EA634B0201
 
 [init]
   defaultBranch = main
@@ -24,7 +24,7 @@
   conflictstyle = zdiff3
   # Display a brief summary describing what was merged
   summary = true
-  # Display a diffstat after the merge completes, which summarizes the changes made, 
+  # Display a diffstat after the merge completes, which summarizes the changes made,
   # showing how many lines were added and removed in each file.
   diffstat = true
   # Include up to 60 commit messages from the merged branch in the merge commit message
@@ -33,7 +33,7 @@
 [pull]
   # automatically pulls the current branch
   default = current
-  # enforce fast-forward merges for pull, 
+  # enforce fast-forward merges for pull,
   # preventing unnecessary merge commits and maintaining a linear commit history
   # equivalent of running git pull --ff-only every time you git pull
   # ff = only
@@ -51,12 +51,12 @@
 
 [rerere]
   # rerere: reuse recovered resolution
-  # it remembers how you resolved merge conflicts during a git rebase and 
+  # it remembers how you resolved merge conflicts during a git rebase and
   # automatically resolves conflicts for you when it can
   # reducing the effort required for repeated merges.
   enabled = 1
   # After a conflict is resolved manually,
-  # Git will automatically store the resolution in the rerere cache, 
+  # Git will automatically store the resolution in the rerere cache,
   # making it available for future use.
   autoUpdate = true
 
@@ -67,7 +67,7 @@
   # make it easier to modify old commits
   # --autosquash always gets passed automatically to git rebase
   autosquash = true
-  # If commits are removed or missing during a rebase, 
+  # If commits are removed or missing during a rebase,
   # issue a warning rather than # silently ignoring them.
   missingCommitsCheck = warn
 
@@ -126,7 +126,7 @@
 
 # data integrity
 # [transfer]
-  # Verifies the integrity of all objects during data transfer operations like clone, fetch, and receive 
+  # Verifies the integrity of all objects during data transfer operations like clone, fetch, and receive
   # helping detect corruption or tampering early.
   # applies to all fsckObjects below.
   # fsckObjects = true
@@ -136,13 +136,13 @@
 
 # [fetch]
   # fsckObjects = true
-  # Automatically remove remote-tracking branches that 
+  # Automatically remove remote-tracking branches that
   # no longer exist on the remote repository during a ‘git fetch
-  # keep the local repository clean by removing outdated references to remote branches that 
+  # keep the local repository clean by removing outdated references to remote branches that
   # have been # deleted
   # prune = true
   # Automatically delete remote tags
-  # ensures that your local tags list is up-to-date and 
+  # ensures that your local tags list is up-to-date and
   # prevents the accumulation of tags that no longer exist on the remote
   # pruneTags = true
 
@@ -160,18 +160,18 @@
   # helper = manager-core # uses GCM (git credential manager) which uses OS-native keychains (must install GCM first)
 
 [credential "https://github.com"]
-  helper = 
+  helper =
   helper = !/usr/bin/gh auth git-credential
 
 [credential "https://gist.github.com"]
-  helper = 
+  helper =
   helper = !/usr/bin/gh auth git-credential
 
 [alias]
   a = add
   aa = add -A
   s = show
-  p = push 
+  p = push
   pf = push --force
   st = status -sb
   ci = commit
@@ -196,3 +196,7 @@
 # https://www.jamescherti.com/optimized-git-configuration-for-performance-and-usability/
 # https://github.com/henrebotha/dotfiles/blob/main/git/dot-gitconfig
 # https://github.com/felipec/dotfiles/blob/master/.gitconfig
+[receive]
+	advertisePushOptions = true
+[safe]
+	directory = *
