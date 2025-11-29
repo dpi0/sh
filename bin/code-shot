@@ -1,31 +1,16 @@
 #!/usr/bin/env bash
 
-# Global variables
 THEME="gruvbox"
 OUTPUT_DIR="$HOME/Screenshots"
 TIME_HHMMSS=$(date +%H-%M-%S)
 DATE_DDMMM=$(date +%d-%b)
 
-# Create output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
 
-# Parse arguments
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --theme)
-      THEME="$2"
-      shift 2
-      ;;
-    *)
-      FILE_PATH="$1"
-      shift
-      ;;
-  esac
-done
+FILE_PATH="$1"
 
-# Validate file path
 if [[ -z "$FILE_PATH" ]]; then
-  echo "Usage: $0 [--theme THEME] /path/to/file"
+  echo "Usage: $0 /path/to/file"
   exit 1
 fi
 
@@ -34,23 +19,22 @@ if [[ ! -f "$FILE_PATH" ]]; then
   exit 1
 fi
 
-# Generate output file name
 OUTPUT_FILE="$(basename "$FILE_PATH") ($TIME_HHMMSS) ($DATE_DDMMM).png"
 OUTPUT_PATH="$OUTPUT_DIR/$OUTPUT_FILE"
 
-# Execute codeshot with theme
-if freeze -t "$THEME" "$FILE_PATH" --padding 20 --font.family "JetBrains Mono Nerd Font" \
-  --font.size 16 --line-height 1.4 --show-line-numbers --window --output "$OUTPUT_PATH"; then
-  echo "✅ Screenshot saved to $OUTPUT_PATH"
-else
-  echo "❌ Failed to create screenshot"
-  exit 1
-fi
+freeze \
+  -t "$THEME" \
+  "$FILE_PATH" \
+  --padding 20 \
+  --font.family "JetBrains Mono Nerd Font" \
+  --font.size 16 \
+  --line-height 1.4 \
+  --show-line-numbers \
+  --window \
+  --output "$OUTPUT_PATH"
 
-# Upload the image
-if command -v pst > /dev/null 2>&1; then
-  echo "☁️ Uploading screenshot..."
-  pst "$OUTPUT_PATH"
-else
-  echo "⚠️ 'pst' command not found. Screenshot saved but not uploaded."
+echo "Screenshot saved to $OUTPUT_PATH"
+
+if command -v notify-send >/dev/null 2>&1; then
+  notify-send -i "$OUTPUT_PATH" "Screenshot Created" "Saved to: $OUTPUT_PATH"
 fi

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-if ! command -v bat && ! command -v tail &>/dev/null; then
-  echo "❌ ERROR: 'bat' and 'tail' not installed. Exiting..."
+if ! command -v bat || ! command -v tail &>/dev/null; then
+  echo "❌ ERROR: 'bat' or 'tail' not installed. Exiting..."
   exit 1
 fi
 
