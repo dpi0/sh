@@ -9,37 +9,32 @@ run = "plugin what-size"
 desc = "Calc size of selection or cwd"
 
 [[mgr.prepend_keymap]]
-on   = [ "g", "m" ]
-run  = "plugin chmod"
+on = ["g", "m"]
+run = "plugin chmod"
 desc = "Chmod on selected files"
 
 [[mgr.prepend_keymap]]
-on   = "!"
-run  = 'shell "$SHELL" --block'
+on = "!"
+run = 'shell "$SHELL" --block'
 desc = "Open shell here"
 
 [[input.prepend_keymap]]
-on   = "<Esc>"
-run  = "close"
+on = "<Esc>"
+run = "close"
 desc = "Cancel input"
 
 [[mgr.prepend_keymap]]
-on   = [ "g", "O" ]
+on = ["g", "O"]
 run = 'shell -- dragon "$1"'
-desc  = "Dragon - Drag n Drop"
+desc = "Dragon - Drag n Drop"
 
 [[mgr.prepend_keymap]]
-on   = [ "g", "o" ]
+on = ["g", "o"]
 # run = 'shell -- dragon -x -i -T "$1"'
 run = '''
     shell "ripdrag \"$@\" 2>/dev/null &" --confirm
 '''
-desc  = "Drag n Drop"
-
-[[mgr.prepend_keymap]]
-on   = [ "g", "l" ]
-run  = "plugin lazygit"
-desc = "run lazygit"
+desc = "Drag n Drop"
 
 [[mgr.prepend_keymap]]
 on = ["g", "r"]
@@ -52,8 +47,8 @@ run = "plugin fr rga"
 desc = "Search file by content (rga)"
 
 [[mgr.prepend_keymap]]
-on   = "o"
-run  = "plugin open-with-cmd --args=block"
+on = "o"
+run = "plugin open-with-cmd --args=block"
 desc = "Open with command in the terminal"
 
 # [[manager.prepend_keymap]]
@@ -62,41 +57,141 @@ desc = "Open with command in the terminal"
 # desc = "Open with command"
 
 [[mgr.prepend_keymap]]
-on = [ "u", "a" ]
+on = ["u", "a"]
 run = "plugin yamb save"
 desc = "Add bookmark"
 
 [[mgr.prepend_keymap]]
-on = [ "b" ]
+on = ["b"]
 run = "plugin yamb jump_by_key"
 desc = "Jump bookmark by key"
 
 [[mgr.prepend_keymap]]
-on = [ "u", "G" ]
+on = ["u", "G"]
 run = "plugin yamb jump_by_fzf"
 desc = "Jump bookmark by fzf"
 
 [[mgr.prepend_keymap]]
-on = [ "u", "d" ]
+on = ["u", "d"]
 run = "plugin yamb delete_by_key"
 desc = "Delete bookmark by key"
 
 [[mgr.prepend_keymap]]
-on = [ "u", "D" ]
+on = ["u", "D"]
 run = "plugin yamb delete_by_fzf"
 desc = "Delete bookmark by fzf"
 
 [[mgr.prepend_keymap]]
-on = [ "u", "A" ]
+on = ["u", "A"]
 run = "plugin yamb delete_all"
 desc = "Delete all bookmarks"
 
 [[mgr.prepend_keymap]]
-on = [ "u", "r" ]
+on = ["u", "r"]
 run = "plugin yamb rename_by_key"
 desc = "Rename bookmark by key"
 
 [[mgr.prepend_keymap]]
-on = [ "u", "R" ]
+on = ["u", "R"]
 run = "plugin yamb rename_by_fzf"
 desc = "Rename bookmark by fzf"
+
+[[mgr.prepend_keymap]]
+on = ["g", "l"]
+run = "plugin mount"
+desc = "Mount directories"
+
+[[mgr.prepend_keymap]]
+on = "'"
+run = "plugin jump-to-char"
+desc = "Jump to char"
+
+[[mgr.prepend_keymap]]
+on = ["g", "k"]
+run = "plugin kdeconnect-send"
+desc = "Send selected files via KDE Connect"
+
+[[mgr.prepend_keymap]]
+on = ["u", "r"]
+run = "plugin yamb rename_by_key"
+desc = "Rename bookmark by key"
+
+[[mgr.prepend_keymap]]
+on = ["M", "m"]
+run = "plugin gvfs -- select-then-mount"
+desc = "Select device then mount"
+
+[[mgr.prepend_keymap]]
+on = ["M", "m"]
+run = "plugin gvfs -- select-then-mount --jump"
+desc = "Select device to mount and jump to its mount point"
+
+[[mgr.prepend_keymap]]
+on = ["M", "R"]
+run = "plugin gvfs -- remount-current-cwd-device"
+desc = "Remount device under cwd"
+
+[[mgr.prepend_keymap]]
+on = ["M", "u"]
+run = "plugin gvfs -- select-then-unmount"
+desc = "Select device then unmount"
+
+[[mgr.prepend_keymap]]
+on = ["M", "u"]
+run = "plugin gvfs -- select-then-unmount --eject"
+desc = "Select device then eject"
+
+[[mgr.prepend_keymap]]
+on = ["M", "U"]
+run = "plugin gvfs -- select-then-unmount --eject --force"
+desc = "Select device then force to eject/unmount"
+
+[[mgr.prepend_keymap]]
+on = ["M", "a"]
+run = "plugin gvfs -- add-mount"
+desc = "Add a GVFS mount URI"
+
+[[mgr.prepend_keymap]]
+on = ["M", "e"]
+run = "plugin gvfs -- edit-mount"
+desc = "Edit a GVFS mount URI"
+
+[[mgr.prepend_keymap]]
+on = ["M", "r"]
+run = "plugin gvfs -- remove-mount"
+desc = "Remove a GVFS mount URI"
+
+[[mgr.prepend_keymap]]
+on = ["M", "M"]
+run = "plugin gvfs -- jump-to-device"
+desc = "Select device then jump to its mount point"
+
+[[mgr.prepend_keymap]]
+on = ["M", "M"]
+run = "plugin gvfs -- jump-to-device --automount"
+desc = "Automount then select device to jump to its mount point"
+
+[[mgr.prepend_keymap]]
+on = ["`", "`"]
+run = "plugin gvfs -- jump-back-prev-cwd"
+desc = "Jump back to the position before jumped to device"
+
+[[mgr.prepend_keymap]]
+on = ["M", "t"]
+run = "plugin gvfs -- automount-when-cd"
+desc = "Enable automount when cd to device under cwd"
+
+[[mgr.prepend_keymap]]
+on = ["M", "T"]
+run = "plugin gvfs -- automount-when-cd --disabled"
+desc = "Disable automount when cd to device under cwd"
+
+[[mgr.prepend_keymap]]
+on = "T"
+run = "plugin toggle-pane min-preview"
+desc = "Show or hide the preview pane"
+
+[[mgr.prepend_keymap]]
+on = "T"
+run = "plugin toggle-pane max-preview"
+desc = "Maximize or restore the preview pane"

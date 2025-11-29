@@ -1,3 +1,9 @@
+# Yazi
+- Entrypoint or main config: `./yazi.toml`
+- Keybinds: `./keymap.toml`
+- Theme: `./theme.toml`
+- Plugins: `./package.toml`
+
 ## how `ya pack -a` works
 
 <https://yazi-rs.github.io/docs/cli>

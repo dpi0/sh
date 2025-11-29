@@ -14,11 +14,6 @@ rev = "aeca767"
 hash = "d0ad0c1946b46a30c8489735fe8de41c"
 
 [[plugin.deps]]
-use = "Lil-Dank/lazygit"
-rev = "7a08a09"
-hash = "a1fa2b3e1826c3a34804ea8c548e9f80"
-
-[[plugin.deps]]
 use = "lpnh/fr"
 rev = "6d5e469"
 hash = "d8455f929580ec602b4d0bbd8e96711"
@@ -33,25 +28,25 @@ use = "h-hg/yamb"
 rev = "22af003"
 hash = "7cc42012a7c2099f80064d228feb8d44"
 
-[[flavor.deps]]
-use = "gosxrgxx/flexoki-dark"
-rev = "28e1977"
-hash = "9dbbb64ea20f9f1271c31951dea55c7b"
+[[plugin.deps]]
+use = "yazi-rs/plugins:mount"
+rev = "2301ff8"
+hash = "4fccaaf10c36dc2466e2438a386ff017"
 
-[[flavor.deps]]
-use = "dangooddd/kanagawa"
-rev = "31167ed"
-hash = "a04e157148549bacbb2831aab0e6e8cb"
+[[plugin.deps]]
+use = "Deepak22903/kdeconnect-send"
+rev = "5757a65"
+hash = "c23a7c129f3b972569414c8f2a5dd823"
 
-[[flavor.deps]]
-use = "kmlupreti/ayu-dark"
-rev = "5f600aa"
-hash = "a05f94b9a20b64d814c7631074d65c4a"
+[[plugin.deps]]
+use = "boydaihungst/gvfs"
+rev = "d4b8d83"
+hash = "8767b5484bc3e8fc23796b91e0a102b2"
 
-[[flavor.deps]]
-use = "Chromium-3-Oxide/everforest-medium"
-rev = "3d5f847"
-hash = "9b4190e2447f2c843fee23ea5f068f6"
+[[plugin.deps]]
+use = "yazi-rs/plugins:toggle-pane"
+rev = "eaf6920"
+hash = "8a7c58225816a163a6e8730c0adafbc8"
 
 [[flavor.deps]]
 use = "yazi-rs/flavors:dracula"
