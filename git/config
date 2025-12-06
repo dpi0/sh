@@ -111,41 +111,6 @@
   hunk-header-line-number-style = "#067a00"
   hunk-header-style = file line-number syntax
 
-# performance tuning
-[pack]
-  # Configures Git to auto-detect the number of CPUs and set the number of threads accordingly
-  threads = 0
-  # enhances Git’s efficiency for large repositories. It tells Git to use up to 5GB of RAM when creating packfiles
-  # windowMemory = 5g
-  # The packSizeLimit configuration in Git determines the maximum size of a packfile that Git will generate
-  # packSizeLimit = 2g
-
-; [url "git@github.com:"]
-;   # it’ll replace https://github.com in remotes with git@github.com
-;   insteadOf = "https://github.com/"
-
-# data integrity
-# [transfer]
-  # Verifies the integrity of all objects during data transfer operations like clone, fetch, and receive
-  # helping detect corruption or tampering early.
-  # applies to all fsckObjects below.
-  # fsckObjects = true
-
-# [receive]
-  # fsckObjects = true
-
-# [fetch]
-  # fsckObjects = true
-  # Automatically remove remote-tracking branches that
-  # no longer exist on the remote repository during a ‘git fetch
-  # keep the local repository clean by removing outdated references to remote branches that
-  # have been # deleted
-  # prune = true
-  # Automatically delete remote tags
-  # ensures that your local tags list is up-to-date and
-  # prevents the accumulation of tags that no longer exist on the remote
-  # pruneTags = true
-
 [help]
   # When a mistyped Git command closely resembles a valid one
   # this setting prompts the user with a suggestion before executing the corrected command.
@@ -191,11 +156,6 @@
   squash = rebase -i --autosquash
   undo = reset --hard @{1}
 
-# SOURCES:
-# https://jvns.ca/blog/2024/02/16/popular-git-config-options/
-# https://www.jamescherti.com/optimized-git-configuration-for-performance-and-usability/
-# https://github.com/henrebotha/dotfiles/blob/main/git/dot-gitconfig
-# https://github.com/felipec/dotfiles/blob/master/.gitconfig
 [receive]
 	advertisePushOptions = true
 [safe]
