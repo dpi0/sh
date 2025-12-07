@@ -5,7 +5,7 @@
 The best terminal file manager.
 
 ```bash
-ln -s ~/.sh/yazi ~/.config/yazi
+ln -s ~/.sh/yazi ~/.config/
 
 # Install all packages in package.toml
 ya pkg install

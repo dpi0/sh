@@ -2,10 +2,10 @@
 
 <https://github.com/tmux/tmux/wiki/Getting-Started>
 
-The terminal multiplexer.
+Terminal multiplexer.
 
 ```bash
-ln -s ~/.sh/tmux ~/.config/tmux
+ln -s ~/.sh/tmux ~/.config/
 
 # To apply
 tmux kill-server
