@@ -5,68 +5,50 @@ sort_reverse = true
 linemode = "size_and_mtime"
 sort_dir_first = false
 show_symlink = true
-scrolloff = 5               # number of files to keep above and below the cursor
+scrolloff = 5
 
 [input]
 cursor_blink = false
 
 [preview]
-
-wrap = "no"         # Wrap long lines in the code preview.
-max_width = 600     # Maximum preview width and height for images, Do a yazi --clear-cache to take effect after changing this
+wrap = "no"
+max_width = 600
 max_height = 900
-image_quality = 70  # Quality on pre-caching images, range 50-90.
-sixel_fraction = 15 # range 10-20. A smaller value produces better results but is also slower.
+image_quality = 70
+sixel_fraction = 15
 
-# Configure available openers that can be used in [open]
 [opener]
-edit = [
-  { run = '${EDITOR:-vim} "$@"', desc = "$EDITOR", block = true, for = "unix" },
-]
-
-open = [
-  { run = 'xdg-open "$1"', desc = "Open", for = "linux" },
-  { run = 'open "$@"', desc = "Open", for = "macos" },
-]
-
-pdf_open = [
-  { run = 'evince "$1"', desc = "Open PDF with Evince", for = "linux" },
-]
-
+open = [{ run = 'xdg-open "$1"', desc = "Open", for = "linux" }]
 reveal = [
   { run = 'xdg-open "$(dirname "$1")"', desc = "Reveal", for = "linux" },
-  { run = 'open -R "$1"', desc = "Reveal", for = "macos" },
+]
+extract = [{ run = 'ouch d -y "$@"', desc = "Extract here", for = "unix" }]
+play = [{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" }]
+edit = [
+  { run = '${EDITOR:-nvim} "$@"', desc = "$EDITOR", block = true, for = "unix" }, # NOTE: Custom opener
+]
+pdf_open = [
+  { run = 'evince "$1"', desc = "Open PDF with Evince", for = "linux" }, # Custom opener
 ]
 
-extract = [{ run = 'ouch d -y "$@"', desc = "Extract here", for = "unix" }]
-
-play = [{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" }]
-
 [open]
-# ADD CUSTOM OPENING RULES with prepend_rules, like pdf_open --> uses evince
 prepend_rules = [
-  { name = "*.json", use = "edit" },
-
+  { name = "*.json", use = "edit" },           # Using that custom opener
   { name = "*.pdf", use = "pdf_open" },
-
-  # Multiple openers for a single rule
   { name = "*.html", use = ["open", "edit"] },
 ]
 
 [plugin]
-# NEEDED FOR OUCH.YAZI
 prepend_previewers = [
-  # Archive previewer
   { mime = "application/*zip", run = "ouch" },
   { mime = "application/x-tar", run = "ouch" },
   { mime = "application/x-bzip2", run = "ouch" },
   { mime = "application/x-7z-compressed", run = "ouch" },
   { mime = "application/x-rar", run = "ouch" },
   { mime = "application/x-xz", run = "ouch" },
-
-  # VERY USEFUL: disable yazi video preview
-  { name = "video/*", mime = "video/*", run = "noop" },
+  { name = "video/*", mime = "video/*", run = "noop" },   # NOTE: Disables video preview
 ]
 
-# VERY USEFUL: disable yazi video preview
-prepend_preloaders = [{ name = "video/*", mime = "video/*", run = "noop" }]
+prepend_preloaders = [
+  { name = "video/*", mime = "video/*", run = "noop" },
+] # NOTE: Disables video preview

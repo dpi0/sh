@@ -43,11 +43,6 @@ use = "boydaihungst/gvfs"
 rev = "d4b8d83"
 hash = "8767b5484bc3e8fc23796b91e0a102b2"
 
-[[plugin.deps]]
-use = "yazi-rs/plugins:toggle-pane"
-rev = "eaf6920"
-hash = "8a7c58225816a163a6e8730c0adafbc8"
-
 [[flavor.deps]]
 use = "yazi-rs/flavors:dracula"
 rev = "d04a298"
