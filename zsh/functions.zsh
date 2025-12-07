@@ -382,3 +382,59 @@ zvm_vi_yank() {
   printf %s "${CUTBUFFER}" | wl-copy -n
   zvm_exit_visual_mode
 }
+
+ditag() {
+  local img="$1"
+
+  # Validate arguments
+  if [ $# -ne 1 ]; then
+    echo "Usage: ditag IMAGE_NAME"
+    echo "Example: ditag nginx"
+    return 1
+  fi
+
+  # Check dependency
+  if ! command -v regctl &>/dev/null; then
+    echo "'regctl' not installed."
+    return 1
+  fi
+
+  echo "Running: regctl tag ls '$img' | sort -V -r | bat"
+  regctl tag ls "$img" | sort -V -r | bat
+}
+
+what() {
+  if [ $# -ne 1 ]; then
+    echo "Usage: what <tool>"
+    echo "Example: what scp"
+    return 1
+  fi
+
+  local cmd="$1"
+  echo "Running: curl https://cheat.sh/$cmd"
+  curl "https://cheat.sh/$cmd"
+}
+
+batf() {
+  # Dependency check
+  if ! command -v bat &>/dev/null || ! command -v tail &>/dev/null; then
+    echo "ERROR: 'bat' or 'tail' not installed."
+    return 1
+  fi
+
+  # Argument check
+  if [ $# -ne 1 ]; then
+    echo "Usage: batf FILE"
+    echo "Example: batf /var/log/syslog"
+    return 1
+  fi
+
+  local file="$1"
+  if [[ ! -f "$file" ]]; then
+    echo "ERROR: File '$file' does not exist."
+    return 1
+  fi
+
+  local ext="${file##*.}"
+  tail -f "$file" | bat -l "$ext" --paging=never
+}

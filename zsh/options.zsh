@@ -12,117 +12,113 @@ setopt HIST_IGNORE_SPACE            # Commands prefixed with a space are not sav
 setopt HIST_IGNORE_DUPS             # Don't store duplicate lines consecutively
 setopt INC_APPEND_HISTORY           # history file is updated immediately after a command is entered, Acceptable unless you're doing 1000s of commands/sec
 
-# COMPLETION SYSTEM
+# COMPLETIONS
 fpath+=("$HOME/zsh/completion")
 autoload -Uz compinit add-zsh-hook
 compinit
 
-# PATHS
+# PATH
 path+=(
   "$HOME/.local/bin"
   "$HOME/.cargo/bin"
   "$HOME/scripts"
-  "$HOME/sh/bin"
   "$HOME/bin"
   "$HOME/.deno/bin"
   "$HOME/.nix-profile/bin"
 )
 
-export XDG_RUNTIME_DIR=/run/user/$(id -u)
-
-FNM_PATH="$HOME/.local/share/fnm"
-if [[ -d $FNM_PATH ]]; then
-  path=("$FNM_PATH" $path)
-  eval "$(fnm env)"
-fi
-
+# pnpm
 PNPM_HOME="$HOME/.local/share/pnpm"
 if [[ -d $PNPM_HOME && ":$PATH:" != *":$PNPM_HOME:"* ]]; then
   path=("$PNPM_HOME" $path)
 fi
-
-if command -v go &> /dev/null; then
-  path+=("$(go env GOPATH)/bin")
-  export GOPATH="$HOME/go"
+if command -v pnpm &> /dev/null; then
+  export PNPM_HOME="/home/dpi0/.local/share/pnpm"
+  case ":$PATH:" in
+    *":$PNPM_HOME:"*) ;;
+    *) PATH="$PNPM_HOME:$PATH" ;;
+  esac
 fi
 
+# go
+if command -v go &> /dev/null; then
+  export GOPATH="$HOME/go"
+  path+=("$GOPATH/bin")
+fi
+
+# Ruby gems
 if command -v gem &> /dev/null; then
   export GEM_HOME="$(gem env user_gemhome)"
   export GEM_PATH="$GEM_HOME"
   path=("$GEM_HOME/bin" $path)
 fi
 
-
+# opencode
 if command -v opecode &> /dev/null; then
   export PATH=/home/dpi0/.opencode/bin:$PATH
 fi
 
-if command -v pnpm &> /dev/null; then
-  export PNPM_HOME="/home/dpi0/.local/share/pnpm"
-  case ":$PATH:" in
-    *":$PNPM_HOME:"*) ;;
-    *) export PATH="$PNPM_HOME:$PATH" ;;
-  esac
+# gh extensions
+GH_EXT_BASE="$HOME/.local/share/gh/extensions"
+if [[ -d $GH_EXT_BASE ]]; then
+  export PATH="$HOME/.local/share/gh/extensions/*/bin:$PATH"
 fi
 
-if command -v kubectl &> /dev/null; then
-  export KUBECONFIG=~/.kube/config
+# NOTE: Export all PATHS ABOVE
+typeset -U path
+export PATH="${(j(:))path}"
+
+# SESSION / SSH / KUBE
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+# Only override SSH_AUTH_SOCK when not in an SSH session
+if [[ -z "${SSH_CONNECTION:-}" ]]; then
+  export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
 fi
 
-# https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
-# first run:
-# systemctl --user enable --now ssh-agent.service
-# systemctl --user status ssh-agent.service
-# THEN REBOOT! (logging out doesn't work)
-# have to then add this:
-if [[ -z "${SSH_CONNECTION}" ]]; then
-    export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
-fi
-# then check: echo $SSH_AUTH_SOCK
-
-# add your keys to stay persistent
+# Ensure git-homelab key is loaded
 if ! ssh-add -l 2>/dev/null | grep -q git-homelab; then
-    ssh-add ~/.ssh/git-homelab >/dev/null 2>&1
+  ssh-add "$HOME/.ssh/git-homelab" >/dev/null 2>&1
 fi
 
-export PATH="${(j(:))path}"  # Export once, joined with ':'
-
-# ENVIRONMENT VARIABLES
+# EXPORTS
 export SCRIPTS="$HOME/scripts"
-export GPG_TTY=$(tty)
-export TERMINAL=/usr/bin/kitty
-
-# for the plugin: https://github.com/joshskidmore/zsh-fzf-history-search
-# ZSH_FZF_HISTORY_SEARCH_BIND='^x'
+export SHROOT="$HOME/.sh"
+export GPG_TTY="$(tty)"
+export TERMINAL="/usr/bin/kitty"
 export PIPENV_VENV_IN_PROJECT=0
+export GROFF_NO_SGR=1
+export MANPAGER='nvim +Man!'
 
-if command -v vivid &>/dev/null; then
-    export LS_COLORS="$(vivid generate molokai)"
+# kubectl
+if command -v kubectl &> /dev/null; then
+  export KUBECONFIG="$HOME/.kube/config"
 fi
 
-if command -v nvim &>/dev/null; then
-    export EDITOR="/usr/bin/nvim"
-elif command -v nvim >/dev/null 2>&1; then
-    export EDITOR="$(command -v nvim)"
+# LS colors via vivid
+if command -v vivid &> /dev/null; then
+  export LS_COLORS="$(vivid generate molokai)"
 fi
 
+# editor
+if command -v nvim &> /dev/null; then
+  export EDITOR="$(command -v nvim)"
+fi
+
+# zoxide
 if command -v zoxide &> /dev/null; then
   export _ZO_MAXAGE=100
   export _ZO_EXCLUDE_DIRS="$HOME:$HOME/Downloads:$HOME/.cache:$HOME/.local/share/Trash:/tmp:/var/tmp:/dev:/proc:/sys:/run:/mnt:/media:/lost+found:/"
   eval "$(zoxide init zsh --cmd j)"
 fi
 
+# direnv
 if command -v direnv &> /dev/null; then
   eval "$(direnv hook zsh)"
 fi
 
-export GROFF_NO_SGR=1
-export MANPAGER='nvim +Man!'
-
 # https://github.com/junegunn/fzf.vim/issues/358#issuecomment-841665170
 if command -v fzf &> /dev/null; then
-   # command -v bat &> /dev/null && \
-   # command -v fd &> /dev/null; then
   export FZF_DEFAULT_OPTS="
     --layout=reverse
     --preview='bat --style=numbers --color=always --line-range :500 {}'
@@ -134,7 +130,7 @@ if command -v fzf &> /dev/null; then
   "
 fi
 
-# fzf-tab config
+# fzf-tab
 # https://github.com/Aloxaf/fzf-tab/issues/392
 zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --color always --icons -a -l --time-style relative --changed $realpath'
 zstyle ':fzf-tab:*' switch-group ',' '.'

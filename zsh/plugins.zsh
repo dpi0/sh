@@ -1,12 +1,10 @@
-ZDOTDIR="$HOME/.local/share/zsh" # where to store the plugin directories?
+ZDOTDIR="$HOME/.local/share/zsh" # Directory to save the plugins
 ZPLUGINDIR=${ZPLUGINDIR:-${ZDOTDIR:-$HOME/.config/zsh}/plugins}
 
 if [[ ! -d $ZPLUGINDIR/zsh_unplugged ]]; then
   git clone https://github.com/mattmc3/zsh_unplugged $ZPLUGINDIR/zsh_unplugged
 fi
 
-# Loads the "manager" itself before the plugins
-# contains only the simple plugin-load()
 source $ZPLUGINDIR/zsh_unplugged/zsh_unplugged.zsh
 
 function plugin-update {
@@ -18,16 +16,11 @@ function plugin-update {
   done
 }
 
-# to work with this on arch linux, install `pkgfile` and run `sudo pkgfile --update`
+# Manually loading
 source $ZSHROOT/plugins/zsh-fzf-history-search/zsh-fzf-history-search.plugin.zsh
 source $ZSHROOT/plugins/dirhistory/dirhistory.plugin.zsh
 source $ZSHROOT/plugins/direnv/direnv.plugin.zsh
-# source $ZSHROOT/plugins/command-not-found/command-not-found.plugin.zsh
-# source $ZSHROOT/plugins/cp/cp.plugin.zsh
-# source $ZSHROOT/plugins/fancy-ctrl-z/fancy-ctrl-z.plugin.zsh
 
-# ORDER MATTERS HERE!
-# to get lang supported plugins: https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins-Overview
 repos=(
   zsh-users/zsh-autosuggestions
   zsh-users/zsh-syntax-highlighting
@@ -35,12 +28,6 @@ repos=(
   zdharma-continuum/fast-syntax-highlighting
   Aloxaf/fzf-tab
   hlissner/zsh-autopair
-
-  # wfxr/forgit
-  # MichaelAquilina/zsh-you-should-use
-  # jeffreytse/zsh-vi-mode
-  # bigH/git-fuzzy
-  # larkery/zsh-histdb
 )
 
 plugin-load $repos
