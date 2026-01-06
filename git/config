@@ -1,95 +1,57 @@
 [user]
   name = divyansh
   email = dpi0.dev@proton.me
-	signingkey = 5121E1EA634B0201
+  signingkey = 5121E1EA634B0201 # GPG Signing Key
+
+[commit]
+  gpgSign = true # force all commits to be signed
+  verbose = true # show detailed info with diff in the editor
 
 [init]
   defaultBranch = main
+
+[branch]
+  sort = -committerdate # sort branches by commit date
+
+[pull]
+  default = current # matches upstream branch name when pulling
+  rebase = true # When pulling, replay local commits on top of fetched commits instead of creating a merge commit
+
+[push]
+  default = simple # matches upstream branch name when pushing
+  followTags = true # push release tags automatically
+
+[log]
+  date = local # git log date format, Sun Jan 5 14:59:12 2025
+
+[help]
+  autoCorrect = prompt # suggests correct command upon mistype
+
+[tag]
+  sort = version:refname # sort tags when listed using version aware order system
+
+[credential "https://github.com"]
+  helper =
+  helper = !/usr/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+  helper =
+  helper = !/usr/bin/gh auth git-credential
+
+# Delta Configuration (https://dandavison.github.io/delta/configuration.html)
 
 [core]
   pager = delta
   editor = nvim
   autocrlf = false
-  # Preloads the index into memory for improved performance when running Git commands like status and diff
-  preloadindex = true
-
-[commit]
-  # includes the full commit diff in the text editor when composing the commit message
-  verbose = true
-	gpgSign = true
-  template = ~/.config/git/template
+  preloadindex = true # preloads the index into memory for improved performance when running Git commands like status and diff
 
 [merge]
-  # https://www.ductile.systems/zdiff3/
-  conflictstyle = zdiff3
-  # Display a brief summary describing what was merged
-  summary = true
-  # Display a diffstat after the merge completes, which summarizes the changes made,
-  # showing how many lines were added and removed in each file.
-  diffstat = true
-  # Include up to 60 commit messages from the merged branch in the merge commit message
-  log = 60
-
-[pull]
-  # automatically pulls the current branch
-  default = current
-  # enforce fast-forward merges for pull,
-  # preventing unnecessary merge commits and maintaining a linear commit history
-  # equivalent of running git pull --ff-only every time you git pull
-  # ff = only
-  # equivalent of running git pull --rebase every time you git pull
-  # doesn’t make sense to set both of them at once, since --ff-only overrides --rebase
-  rebase = true
-
-[push]
-  # push the current branch to the remote, assuming the branch has an upstream set
-  default = current
-  # automatically sets up remote tracking for new branches
-  autoSetupRemote = true
-  # Push all annotated tags to the remote repository along with the branch # updates
-  followTags = true
-
-[rerere]
-  # rerere: reuse recovered resolution
-  # it remembers how you resolved merge conflicts during a git rebase and
-  # automatically resolves conflicts for you when it can
-  # reducing the effort required for repeated merges.
-  enabled = 1
-  # After a conflict is resolved manually,
-  # Git will automatically store the resolution in the rerere cache,
-  # making it available for future use.
-  autoUpdate = true
-
-[rebase]
-  # automatically runs git stash before a git rebase and git stash pop after.
-  # basically passes --autostash to git rebase
-  autostash = true
-  # make it easier to modify old commits
-  # --autosquash always gets passed automatically to git rebase
-  autosquash = true
-  # If commits are removed or missing during a rebase,
-  # issue a warning rather than # silently ignoring them.
-  missingCommitsCheck = warn
-
-[log]
-  # Display dates as YYYY-MM-DD HH:MM:DD (e.g., 2025-03-25 14:59:12 -0400)
-  date = iso
-
-[branch]
-  # Configures git branch to sort branches by most recently used rather than alphabetically,
-  # making it easier to locate active branches.
-  sort = -committerdate
-
-[tag]
-  # Sort tags by the date they were created.
-  sort = taggerdate
-
-[diff]
-  # better ordering of diffs
-  algorithm = histogram
+  conflictstyle = zdiff3 # https://www.ductile.systems/zdiff3/
+  summary = true # display a brief summary describing what was merged
 
 [interactive]
-  diffFilter = delta --color-only --features=interactive
+  diffFilter = delta --color-only
 
 [delta]
   features = decorations
@@ -97,7 +59,7 @@
   side-by-side = true
   true-color = always
   hyperlinks = true
-  hyperlinks-file-link-format = "vscode://file/{path}:{line}"
+  navigate = true  # use n and N to move between diff sections
 
 [delta "interactive"]
   keep-plus-minus-markers = false
@@ -111,27 +73,6 @@
   hunk-header-line-number-style = "#067a00"
   hunk-header-style = file line-number syntax
 
-[help]
-  # When a mistyped Git command closely resembles a valid one
-  # this setting prompts the user with a suggestion before executing the corrected command.
-  autoCorrect = prompt
-
-# git's own credential helper
-[credential]
-  ; helper = cache # caches your credentials in memory for a default 15 min
-  # Or use one of these:
-	helper = store
-	; helper = /usr/lib/git-core/git-credential-libsecret
-  # helper = manager-core # uses GCM (git credential manager) which uses OS-native keychains (must install GCM first)
-
-[credential "https://github.com"]
-  helper =
-  helper = !/usr/bin/gh auth git-credential
-
-[credential "https://gist.github.com"]
-  helper =
-  helper = !/usr/bin/gh auth git-credential
-
 [alias]
   a = add
   aa = add -A
@@ -143,7 +84,7 @@
   co = checkout
   b = branch
   l = -c color.diff=true log
-  lg = -c color.diff=true log --oneline --decorate --graph
+  lg = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n'' %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
   lga = -c color.diff=true log --oneline --decorate --graph --all
   lgb = -c color.diff=true log --oneline --decorate --graph --branches
   lo = -c color.diff=true log --oneline --decorate
@@ -155,8 +96,3 @@
   fixup = commit --fixup
   squash = rebase -i --autosquash
   undo = reset --hard @{1}
-
-[receive]
-	advertisePushOptions = true
-[safe]
-	directory = *
